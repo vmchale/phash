@@ -1,6 +1,7 @@
 module Main (main) where
 
-import           Data.Foldable              (foldrM)
+import           Data.Foldable              (foldrM, toList)
+import           Data.List                  (intercalate)
 import           Data.List.NonEmpty         (NonEmpty (..), (<|))
 import qualified Data.Map                   as M
 import           Data.Word                  (Word64)
@@ -24,7 +25,14 @@ insertHash fp hashes = do
 mkMap :: [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
 mkMap = foldrM insertHash mempty
 
+displayHash :: NonEmpty FilePath -> Word64 -> String
+displayHash fps h = show h ++ " " ++ intercalate ", " (toList fps)
+
+displayAll :: M.Map Word64 (NonEmpty FilePath) -> String
+displayAll hashes = intercalate "\n" (mkLine <$> M.toList hashes)
+    where mkLine (h, fps) = displayHash fps h
+
 main :: IO ()
 main = do
     images <- filter (imgExtension . takeExtension) <$> getDirRecursive "."
-    print =<< mkMap images
+    putStrLn . displayAll =<< mkMap images
