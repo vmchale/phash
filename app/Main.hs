@@ -1,4 +1,16 @@
 module Main (main) where
 
+import           System.Directory.Recursive
+import           System.FilePath            (takeExtension)
+
+imgExtension :: String -> Bool
+imgExtension ".jpg"  = True
+imgExtension ".jpeg" = True
+imgExtension ".png"  = True
+imgExtension ".git"  = True
+imgExtension _       = False -- idgaf about TIFF
+
 main :: IO ()
-main = putStrLn "none yet?"
+main = do
+    images <- filter (imgExtension . takeExtension) <$> getDirRecursive "."
+    print images

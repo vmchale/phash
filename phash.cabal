@@ -51,9 +51,11 @@ executable phash
     build-depends:
         base >=4.3 && <5,
         word-key -any,
-        unpacked-containers -any,
+        containers -any,
+        filepath -any,
+        -- unpacked-containers -any,
         dir-traverse -any
-    mixins: unpacked-containers (Map as Map.Word) requires (Key as WordKey)
+    -- mixins: unpacked-containers (Map as Map.Word) requires (Key as WordKey)
 
     if flag(development)
         ghc-options: -Werror
