@@ -17,5 +17,5 @@ fileHash fp = withCString fp $ \cstr ->
         peek hashPtr
 
     where check (-1) = error ("Hash of file " ++ fp ++ " failed.")
-          check 1    = pure ()
+          check 0    = pure ()
           check _    = error "This should never happen."
