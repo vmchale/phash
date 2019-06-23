@@ -4,6 +4,7 @@ import           Data.Foldable              (foldrM, toList)
 import           Data.List                  (intercalate)
 import           Data.List.NonEmpty         (NonEmpty (..), (<|))
 import qualified Data.Map                   as M
+import qualified Data.Set                   as S
 import           Data.Word                  (Word64)
 import           PerceptualHash             (fileHash)
 import           System.Directory.Recursive
@@ -28,11 +29,21 @@ mkMap = foldrM insertHash mempty
 displayHash :: NonEmpty FilePath -> Word64 -> String
 displayHash fps h = show h ++ " " ++ intercalate ", " (toList fps)
 
+filterDup :: M.Map Word64 (NonEmpty FilePath) -> M.Map Word64 (NonEmpty FilePath)
+filterDup = M.filter p
+    where p :: NonEmpty FilePath -> Bool
+          p (_ :| (_:_)) = True
+          p _            = False
+
 displayAll :: M.Map Word64 (NonEmpty FilePath) -> String
 displayAll hashes = intercalate "\n" (mkLine <$> M.toList hashes)
     where mkLine (h, fps) = displayHash fps h
 
+-- TODO: benchmark this. In particular, verify filterWithKey is slower?
+pruneBullshit :: M.Map Word64 (NonEmpty FilePath) -> M.Map Word64 (NonEmpty FilePath)
+pruneBullshit = flip M.withoutKeys (S.singleton 0)
+
 main :: IO ()
 main = do
     images <- filter (imgExtension . takeExtension) <$> getDirRecursive "."
-    putStrLn . displayAll =<< mkMap images
+    putStrLn . displayAll =<< (filterDup . pruneBullshit <$> mkMap images)
