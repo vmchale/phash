@@ -1,6 +1,0 @@
-constraints: phash +development
-tests: True
-benchmarks: True
-documentation: True
-haddock-hoogle: True
-haddock-internal: True
