@@ -1,5 +1,6 @@
 module PerceptualHash ( fileHash ) where
 
+import           Control.Applicative   (pure)
 import           Data.Word             (Word64)
 import           Foreign.C.String      (CString, withCString)
 import           Foreign.C.Types       (CInt (..))
