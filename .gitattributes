@@ -1,4 +1,0 @@
-*.cpphs linguist-language=Haskell
-*.hsc2hs linguist-language=Haskell
-*.c2hs linguist-language=Haskell
-*.gc linguist-language=Haskell
