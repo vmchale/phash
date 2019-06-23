@@ -9,6 +9,7 @@ import           Foreign.Storable      (peek)
 
 foreign import ccall ph_dct_imagehash :: CString -> Ptr Word64 -> IO CInt
 
+-- | @.gif@ format not supported.
 fileHash :: FilePath -> IO Word64
 fileHash fp = withCString fp $ \cstr ->
     alloca $ \hashPtr -> do
