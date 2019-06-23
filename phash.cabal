@@ -18,12 +18,6 @@ source-repository head
     type: git
     location: https://github.com/vmchale/phash
 
-flag development
-    description:
-        Enable `-Werror`
-    default: False
-    manual: True
-
 library
     exposed-modules:
         PerceptualHash
@@ -32,9 +26,6 @@ library
     ghc-options: -Wall
     build-depends:
         base >=4.3 && <5
-
-    if flag(development)
-        ghc-options: -Werror
 
     if impl(ghc >=8.0)
         ghc-options: -Wincomplete-uni-patterns -Wincomplete-record-updates
@@ -55,9 +46,6 @@ executable phash
         containers -any,
         filepath -any,
         dir-traverse -any
-
-    if flag(development)
-        ghc-options: -Werror
 
     if impl(ghc >=8.0)
         ghc-options: -Wincomplete-uni-patterns -Wincomplete-record-updates
