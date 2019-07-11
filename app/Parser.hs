@@ -16,7 +16,7 @@ debug =
 
 targets :: Parser ([FilePath], Bool)
 targets = (,)
-    <$> many (argument str
+    <$> some (argument str
              (metavar "DIRECTORY"
              <> help "Directory to include"))
     <*> debug
