@@ -1,11 +1,14 @@
 module Main (main) where
 
 import           Data.Foldable              (foldrM, toList)
+import           Data.Foldable              (fold)
 import           Data.List                  (intercalate)
 import           Data.List.NonEmpty         (NonEmpty (..), (<|))
 import qualified Data.Map                   as M
 import qualified Data.Set                   as S
 import           Data.Word                  (Word64)
+import           Options.Applicative        (execParser)
+import           Parser
 import           PerceptualHash             (fileHash)
 import           System.Directory.Recursive
 import           System.FilePath            (takeExtension)
@@ -44,6 +47,14 @@ pruneBullshit :: M.Map Word64 (NonEmpty FilePath) -> M.Map Word64 (NonEmpty File
 pruneBullshit = flip M.withoutKeys (S.singleton 0)
 
 main :: IO ()
-main = do
-    images <- filter (imgExtension . takeExtension) <$> getDirRecursive "."
+main = run =<< execParser wrapper
+
+dirImages :: FilePath -> IO [FilePath]
+dirImages = fmap (filter (imgExtension . takeExtension)) . getDirRecursive
+
+run :: [FilePath] -> IO ()
+run fps = do
+    images <- foldMapA dirImages fps
     putStrLn . displayAll =<< (filterDup . pruneBullshit <$> mkMap images)
+
+    where foldMapA = (fmap fold .) . traverse
