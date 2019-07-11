@@ -43,7 +43,7 @@ executable phash
     build-depends:
         base >=4.9 && <5,
         phash -any,
-        containers -any,
+        containers >=0.5.10.2,
         filepath -any,
         dir-traverse -any
 
