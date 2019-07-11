@@ -1,7 +1,6 @@
 module Main (main) where
 
-import           Data.Foldable              (foldrM, toList)
-import           Data.Foldable              (fold)
+import           Data.Foldable              (fold, foldrM, toList)
 import           Data.List                  (intercalate)
 import           Data.List.NonEmpty         (NonEmpty (..), (<|))
 import qualified Data.Map                   as M
@@ -29,8 +28,11 @@ insertHash fp hashes = do
 mkMap :: [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
 mkMap = foldrM insertHash mempty
 
+displayPaths :: NonEmpty FilePath -> String
+displayPaths = intercalate ", " . toList
+
 displayHash :: NonEmpty FilePath -> Word64 -> String
-displayHash fps h = show h ++ " " ++ intercalate ", " (toList fps)
+displayHash fps h = show h ++ " " ++ displayPaths fps
 
 filterDup :: M.Map Word64 (NonEmpty FilePath) -> M.Map Word64 (NonEmpty FilePath)
 filterDup = M.filter p
@@ -38,9 +40,12 @@ filterDup = M.filter p
           p (_ :| (_:_)) = True
           p _            = False
 
-displayAll :: M.Map Word64 (NonEmpty FilePath) -> String
-displayAll hashes = intercalate "\n" (mkLine <$> M.toList hashes)
+displayDebug :: M.Map Word64 (NonEmpty FilePath) -> String
+displayDebug hashes = intercalate "\n" (mkLine <$> M.toList hashes)
     where mkLine (h, fps) = displayHash fps h
+
+displayAll :: M.Map a (NonEmpty FilePath) -> String
+displayAll fps = intercalate "\n" (displayPaths <$> toList fps)
 
 -- TODO: benchmark this. In particular, verify filterWithKey is slower?
 pruneBullshit :: M.Map Word64 (NonEmpty FilePath) -> M.Map Word64 (NonEmpty FilePath)
@@ -52,9 +57,12 @@ main = run =<< execParser wrapper
 dirImages :: FilePath -> IO [FilePath]
 dirImages = fmap (filter (imgExtension . takeExtension)) . getDirRecursive
 
-run :: [FilePath] -> IO ()
-run fps = do
+run :: ([FilePath], Bool) -> IO ()
+run (fps, debug) = do
     images <- foldMapA dirImages fps
-    putStrLn . displayAll =<< (filterDup . pruneBullshit <$> mkMap images)
+    let displayF = if debug
+        then displayDebug . pruneBullshit
+        else displayAll . filterDup . pruneBullshit
+    putStrLn . displayF =<< mkMap images
 
     where foldMapA = (fmap fold .) . traverse

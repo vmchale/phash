@@ -8,13 +8,20 @@ import qualified Paths_phash         as P
 phashVersion :: V.Version
 phashVersion = P.version
 
-targets :: Parser [FilePath]
-targets = many $
-    argument str
-    (metavar "DIRECTORY"
-    <> help "Directory to include")
+debug :: Parser Bool
+debug =
+    switch
+    (long "debug"
+    <> help "Show debug output")
 
-wrapper :: ParserInfo [FilePath]
+targets :: Parser ([FilePath], Bool)
+targets = (,)
+    <$> many (argument str
+             (metavar "DIRECTORY"
+             <> help "Directory to include"))
+    <*> debug
+
+wrapper :: ParserInfo ([FilePath], Bool)
 wrapper = info (helper <* versionInfo <*> targets)
     (fullDesc
     <> progDesc "A command-line tool to detect duplicate images."
