@@ -50,8 +50,8 @@ executable phash
         phash -any,
         containers >=0.5.10.2,
         filepath -any,
-        dir-traverse -any,
-        optparse-applicative -any
+        dir-traverse >=0.2.0.0,
+        optparse-applicative >=0.13.0.0
 
     if impl(ghc >=8.0)
         ghc-options: -Wincomplete-uni-patterns -Wincomplete-record-updates
