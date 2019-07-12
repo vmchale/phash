@@ -1,16 +1,19 @@
 module Main (main) where
 
-import           Data.Foldable              (fold, foldrM, toList)
-import           Data.List                  (intercalate)
-import           Data.List.NonEmpty         (NonEmpty (..), (<|))
-import qualified Data.Map                   as M
-import qualified Data.Set                   as S
-import           Data.Word                  (Word64)
-import           Options.Applicative        (execParser)
+import           Control.Concurrent.STM      (atomically)
+import           Control.Concurrent.STM.TVar (TVar, modifyTVar', newTVarIO,
+                                              readTVarIO)
+import           Data.Foldable               (toList)
+import           Data.List                   (intercalate)
+import           Data.List.NonEmpty          (NonEmpty (..), (<|))
+import qualified Data.Map                    as M
+import qualified Data.Set                    as S
+import           Data.Word                   (Word64)
+import           Options.Applicative         (execParser)
 import           Parser
-import           PerceptualHash             (fileHash)
-import           System.Directory.Recursive
-import           System.FilePath            (takeExtension)
+import           PerceptualHash              (fileHash)
+import           System.Directory.Parallel
+import           System.FilePath             (takeExtension)
 
 imgExtension :: String -> Bool
 imgExtension ".jpg"  = True
@@ -18,15 +21,29 @@ imgExtension ".jpeg" = True
 imgExtension ".png"  = True
 imgExtension _       = False -- gif doesn't work with CImg AFAICT
 
-insertHash :: FilePath -> M.Map Word64 (NonEmpty FilePath) -> IO (M.Map Word64 (NonEmpty FilePath))
-insertHash fp hashes = do
+insertHash :: FilePath -> IO (M.Map Word64 (NonEmpty FilePath) -> M.Map Word64 (NonEmpty FilePath))
+insertHash fp = do
     hash <- fileHash fp
-    case M.lookup hash hashes of
-        Just others -> pure $ M.insert hash (fp <| others) hashes
-        Nothing     -> pure $ M.insert hash (fp :| []) hashes
+    pure $ \hashes ->
+        case M.lookup hash hashes of
+            Just others -> M.insert hash (fp <| others) hashes
+            Nothing     -> M.insert hash (fp :| []) hashes
 
-mkMap :: [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
-mkMap = foldrM insertHash mempty
+stepMap :: TVar (M.Map Word64 (NonEmpty FilePath)) -> FilePath -> IO ()
+stepMap var fp = do
+    mod' <- insertHash fp
+    atomically $ modifyTVar' var mod'
+
+pathMaps :: [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
+pathMaps fps = do
+    total <- newTVarIO mempty
+    parTraverse (modStep total) fps
+    readTVarIO total
+
+    where modStep total fp =
+            if imgExtension (takeExtension fp)
+                then stepMap total fp
+                else pure ()
 
 displayPaths :: NonEmpty FilePath -> String
 displayPaths = intercalate ", " . toList
@@ -54,15 +71,9 @@ pruneBullshit = flip M.withoutKeys (S.singleton 0)
 main :: IO ()
 main = run =<< execParser wrapper
 
-dirImages :: FilePath -> IO [FilePath]
-dirImages = fmap (filter (imgExtension . takeExtension)) . getDirRecursive
-
 run :: ([FilePath], Bool) -> IO ()
 run (fps, debug) = do
-    images <- foldMapA dirImages fps
     let displayF = if debug
         then displayDebug . pruneBullshit
         else displayAll . filterDup . pruneBullshit
-    putStrLn . displayF =<< mkMap images
-
-    where foldMapA = (fmap fold .) . traverse
+    putStrLn . displayF =<< pathMaps fps

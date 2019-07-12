@@ -1,61 +1,62 @@
-cabal-version: 2.0
-name: phash
-version: 0.1.0.0
-license: BSD3
-license-file: LICENSE
-copyright: Copyright: (c) 2019 Vanessa McHale
-maintainer: vamchale@gmail.com
-author: Vanessa McHale
-synopsis: Find duplicate images
-description:
-    Find similar images using perceptual hashes
-category: Application, CommandLine, Images
-build-type: Simple
-extra-doc-files: README.md
-                 CHANGELOG.md
+cabal-version:   2.0
+name:            phash
+version:         0.1.0.0
+license:         BSD3
+license-file:    LICENSE
+copyright:       Copyright: (c) 2019 Vanessa McHale
+maintainer:      vamchale@gmail.com
+author:          Vanessa McHale
+synopsis:        Find duplicate images
+description:     Find similar images using perceptual hashes
+category:        Application, CommandLine, Images
+build-type:      Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
 
 source-repository head
-    type: git
+    type:     git
     location: https://github.com/vmchale/phash
 
 library
-    exposed-modules:
-        PerceptualHash
+    exposed-modules:   PerceptualHash
     pkgconfig-depends: pHash -any
-    hs-source-dirs: src
-    default-language: Haskell2010
-    ghc-options: -Wall
-    build-depends:
-        base >=4.3 && <5
+    hs-source-dirs:    src
+    default-language:  Haskell2010
+    ghc-options:       -Wall
+    build-depends:     base >=4.3 && <5
 
     if impl(ghc >=8.0)
-        ghc-options: -Wincomplete-uni-patterns -Wincomplete-record-updates
-                     -Wredundant-constraints -Widentities
+        ghc-options:
+            -Wincomplete-uni-patterns -Wincomplete-record-updates
+            -Wredundant-constraints -Widentities
 
     if impl(ghc >=8.4)
         ghc-options: -Wmissing-export-lists
 
 executable phash
-    main-is: Main.hs
-    hs-source-dirs: app
+    main-is:          Main.hs
+    hs-source-dirs:   app
     other-modules:
         Paths_phash
         Parser
-    autogen-modules:
-        Paths_phash
+
+    autogen-modules:  Paths_phash
     default-language: Haskell2010
-    ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
+    ghc-options:      -threaded -rtsopts -with-rtsopts=-N -Wall
     build-depends:
         base >=4.9 && <5,
         phash -any,
         containers >=0.5.10.2,
         filepath -any,
-        dir-traverse >=0.2.0.0,
-        optparse-applicative >=0.13.0.0
+        optparse-applicative >=0.13.0.0,
+        par-traverse -any,
+        stm -any
 
     if impl(ghc >=8.0)
-        ghc-options: -Wincomplete-uni-patterns -Wincomplete-record-updates
-                     -Wredundant-constraints -Widentities
+        ghc-options:
+            -Wincomplete-uni-patterns -Wincomplete-record-updates
+            -Wredundant-constraints -Widentities
 
     if impl(ghc >=8.4)
         ghc-options: -Wmissing-export-lists

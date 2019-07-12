@@ -16,15 +16,15 @@ partitionM f (x:xs) = do
         else pure (as, x:bs)
 
 parTraverse :: (FilePath -> IO ()) -- ^ Action to execute on files
-            -> FilePath -- ^ Starting directory
+            -> [FilePath] -- ^ Starting directories
             -> IO ()
-parTraverse act dir = do
+parTraverse act dirs = do
     ncpu <- getNumCapabilities
     withPool ncpu $ \pool ->
-        loopPool pool dir
+        parallel_ pool $ fmap (loopPool pool) dirs
 
     where loopPool :: Pool -> FilePath -> IO ()
           loopPool pool fp = do
                 all' <- fmap (fp </>) <$> listDirectory fp
-                (dirs, files) <- partitionM doesDirectoryExist all'
-                parallel_ pool (fmap act files ++ fmap (loopPool pool) dirs)
+                (dirs', files) <- partitionM doesDirectoryExist all'
+                parallel_ pool (fmap act files ++ fmap (loopPool pool) dirs')
