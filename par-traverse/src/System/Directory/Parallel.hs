@@ -2,6 +2,7 @@ module System.Directory.Parallel ( parTraverse ) where
 
 import           Control.Concurrent                  (getNumCapabilities)
 import           Control.Concurrent.ParallelIO.Local (Pool, parallel_, withPool)
+import           Control.Monad                       (filterM)
 import           System.Directory                    (doesDirectoryExist,
                                                       listDirectory)
 import           System.FilePath                     ((</>))
@@ -16,9 +17,10 @@ partitionM f (x:xs) = do
         else pure (as, x:bs)
 
 parTraverse :: (FilePath -> IO ()) -- ^ Action to execute on files
+            -> (FilePath -> IO Bool) -- ^ Filter on files
             -> [FilePath] -- ^ Starting directories
             -> IO ()
-parTraverse act dirs = do
+parTraverse act fileP dirs = do
     ncpu <- getNumCapabilities
     withPool ncpu $ \pool ->
         parallel_ pool $ fmap (loopPool pool) dirs
@@ -27,4 +29,5 @@ parTraverse act dirs = do
           loopPool pool fp = do
                 all' <- fmap (fp </>) <$> listDirectory fp
                 (dirs', files) <- partitionM doesDirectoryExist all'
-                parallel_ pool (fmap act files ++ fmap (loopPool pool) dirs')
+                files' <- filterM fileP files
+                parallel_ pool (fmap act files' ++ fmap (loopPool pool) dirs')

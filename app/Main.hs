@@ -37,13 +37,10 @@ stepMap var fp = do
 pathMaps :: [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
 pathMaps fps = do
     total <- newTVarIO mempty
-    parTraverse (modStep total) fps
+    parTraverse (stepMap total) fileFilter fps
     readTVarIO total
 
-    where modStep total fp =
-            if imgExtension (takeExtension fp)
-                then stepMap total fp
-                else pure ()
+    where fileFilter = pure . imgExtension . takeExtension
 
 displayPaths :: NonEmpty FilePath -> String
 displayPaths = intercalate ", " . toList
