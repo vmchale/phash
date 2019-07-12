@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-LD_LIBRARY_PATH="$(cpkg dump library pHash):$(cpkg dump library ffmepg)" phash "$@"
+LD_LIBRARY_PATH="$(cpkg dump library pHash):$(cpkg dump library ffmpeg)" phash "$@"
