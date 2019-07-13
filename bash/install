@@ -8,4 +8,5 @@ cabal new-install cpkg --overwrite-policy=always
 )
 
 cpkg install pHash -vv
-PKG_CONFIG_PATH="$(cpkg dump pkg-config pHash)" cabal new-install exe:phash --overwrite-policy=always
+PKG_CONFIG_PATH="$(cpkg dump pkg-config pHash)" cabal new-install exe:phash-exe --overwrite-policy=always
+cp bash/phash "$HOME/.local/bin"

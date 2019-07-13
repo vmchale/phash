@@ -35,7 +35,7 @@ library
     if impl(ghc >=8.4)
         ghc-options: -Wmissing-export-lists
 
-executable phash
+executable phash-exe
     main-is: Main.hs
     hs-source-dirs: app
     other-modules:
