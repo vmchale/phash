@@ -1,0 +1,4 @@
+packages: ./
+        , par-traverse
+
+max-backjumps: 40000
