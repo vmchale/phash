@@ -22,13 +22,17 @@ library
     exposed-modules:
         PerceptualHash
     hs-source-dirs: src
+    other-modules:
+        Median
     default-language: Haskell2010
+    other-extensions: FlexibleContexts
     ghc-options: -Wall
     build-depends:
         base >=4.3 && <5,
-        hip,
-        vector-algorithms,
-        vector
+        hip -any,
+        vector-algorithms -any,
+        vector -any,
+        primitive -any
 
     if impl(ghc >=8.0)
         ghc-options: -Wincomplete-uni-patterns -Wincomplete-record-updates
@@ -51,7 +55,7 @@ executable phash
     build-depends:
         base >=4.9 && <5,
         phash -any,
-        containers >=0.5.10.2,
+        containers -any,
         filepath -any,
         optparse-applicative >=0.13.0.0,
         par-traverse -any,
