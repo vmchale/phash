@@ -67,3 +67,19 @@ executable phash
 
     if impl(ghc >=8.4)
         ghc-options: -Wmissing-export-lists
+
+benchmark phash-bench
+    type: exitcode-stdio-1.0
+    main-is: Bench.hs
+    hs-source-dirs: bench
+    default-language: Haskell2010
+    ghc-options: -Wall -Wincomplete-uni-patterns
+                 -Wincomplete-record-updates -Wredundant-constraints
+    build-depends:
+        base -any,
+        phash -any,
+        criterion -any,
+        hip
+
+    if impl(ghc >=8.4)
+        ghc-options: -Wmissing-export-lists
