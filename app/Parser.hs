@@ -1,9 +1,9 @@
 module Parser ( wrapper ) where
 
-import           Data.Semigroup      ((<>))
-import           Data.Version        as V
+import           Data.Semigroup        ((<>))
+import           Data.Version          as V
 import           Options.Applicative
-import qualified Paths_phash         as P
+import qualified Paths_perceptual_hash as P
 
 phashVersion :: V.Version
 phashVersion = P.version
