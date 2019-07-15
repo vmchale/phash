@@ -19,6 +19,14 @@ phash ~/Pictures ~/Downloads
 
 ## Installation
 
+### Script
+
+On many platforms, you can install with a script, viz.
+
+```
+curl -sSl https://raw.githubusercontent.com/vmchale/phash/master/bash/install.sh | sh -s
+```
+
 ### Pre-Built Release
 
 Download the latest release from
