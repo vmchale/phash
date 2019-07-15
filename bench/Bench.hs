@@ -2,7 +2,7 @@ module Main (main) where
 
 import           Criterion.Main
 import           Graphics.Image (VU (..), readImageY)
-import           PerceptualHash
+import           PerceptualHash (imgHash)
 
 main :: IO ()
 main =
@@ -10,4 +10,5 @@ main =
                   bgroup "imgHash"
                       [ bench "cat.png" $ nf imgHash f ]
                 ]
-    where img = readImageY VU "demo-data/cat.png"
+    where img = readImageY VU catPath
+          catPath = "demo-data/cat.png"

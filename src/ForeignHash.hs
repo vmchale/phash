@@ -1,3 +1,4 @@
+-- N.B. this is a good deal faster than the Haskell code
 module ForeignHash ( foreignFileHash ) where
 
 import           Data.Word             (Word64)
@@ -9,6 +10,7 @@ import           Foreign.Storable      (peek)
 
 foreign import ccall ph_dct_imagehash :: CString -> Ptr CULLong -> IO CInt
 
+-- | Doesn't work with @.gif@ files
 foreignFileHash :: FilePath -> IO Word64
 foreignFileHash fp = withCString fp $ \cstr ->
     alloca $ \hashPtr -> do
