@@ -9,7 +9,11 @@ import           Control.Monad.ST         (runST)
 import           Data.Bits                (shiftL, (.|.))
 import qualified Data.Vector.Unboxed      as V
 import           Data.Word                (Word64)
-import           Graphics.Image
+import           Graphics.Image           (Array, Bilinear (..), Border (Edge),
+                                           Image, Pixel (PixelX, PixelY),
+                                           VU (..), X, Y, convolve, crop,
+                                           makeImage, readImageY, resize,
+                                           transpose, (|*|))
 import           Graphics.Image.Interface (toVector)
 import           Median                   (median)
 
@@ -55,6 +59,4 @@ imgHash = asWord64 . aboveMed . V.map d . toVector . crop8 . dct . size32 . mean
             in V.map (<med) v
 
 fileHash :: FilePath -> IO Word64
-fileHash fp = do
-    grey <- readImageY VU fp
-    pure $ imgHash grey
+fileHash = fmap imgHash . readImageY VU
