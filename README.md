@@ -7,3 +7,28 @@
 [![Dependencies of latest version on Hackage](https://img.shields.io/hackage-deps/v/perceptual-hash.svg)](https://hackage.haskell.org/package/perceptual-hash)
 
 This is a command-line tool to detect (potential) duplicate images.
+
+## Use
+
+Use it on one or more directories:
+
+```
+phash ~/Pictures ~/Downloads
+~/Pictures/frog.jpeg, ~/Downloads/frog.png
+```
+
+## Installation
+
+### Pre-Built Release
+
+Download the latest release from
+[here](https://github.com/vmchale/phash/releases).
+
+### Source
+
+Download [cabal-install](https://www.haskell.org/cabal/download.html) and
+[GHC](https://www.haskell.org/ghc/download.html). Then:
+
+```
+cabal new-install perceptual-hash
+```
