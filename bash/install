@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-cabal new-install cpkg --overwrite-policy=always
-cpkg install pHash -vv
-PKG_CONFIG_PATH="$(cpkg dump pkg-config pHash)" cabal new-install exe:phash --overwrite-policy=always

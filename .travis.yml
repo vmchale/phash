@@ -1,0 +1,65 @@
+---
+sudo: false
+language: c
+cache:
+  directories:
+    - $HOME/.cabal
+    - $HOME/.ghc
+addons:
+  apt:
+    packages:
+      - libgmp3-dev
+matrix:
+  include:
+
+    - env: TARGET=x86_64-unknown-linux-gnu
+      addons:
+        apt:
+          update: true
+          sources:
+            - hvr-ghc
+          packages:
+            - ghc-8.6.5
+            - cabal-install-2.4
+
+    - env: TARGET=x86_64-apple-darwin
+      os: osx
+
+before_install:
+  - |
+    if [ `uname` = "Darwin" ]
+    then
+      brew install cabal-install
+      cabal new-update
+    else
+      export PATH=/opt/ghc/bin:$PATH
+      cabal new-update
+    fi
+  - export PATH=$HOME/.cabal/bin:$PATH
+
+script:
+  - cabal new-build
+  - |
+    if [ `uname` = "Darwin" ]
+    then
+      export BINPATH="$(find dist-newstyle/ -name phash -perm 755 | tail -n1)"
+    else
+      export BINPATH="$(find dist-newstyle/ -name phash -executable | tail -n1)"
+    fi
+  - echo $BINPATH
+  - mv $BINPATH phash-$TARGET
+  - strip phash-$TARGET
+
+deploy:
+  api_key:
+    secure: "MhJjXmxDEvyCRE4I+a93DGm60z1Ve82bwQ/RXTvsqz7J+7dWcnELcK0yM0JxaOFn9Ulj+wGJl6i9kTHJiJOANu4qqEF4kqGa2YlXKgvB6UHlABLRKJVnqpQFs1Xz+bl1KRbUxb18e06eDd387PION0mUg+j/V8P4nC8UggspocwCFCdNFFkJ3EvAcV+9Zu6qSGvdrxumEFWc2FW9M++iXR8Ebp47X29PiZEcG53+D1U3vlzZTNlZjCrDEicxFCJ3ZN8sgRxa32L4QK0hRVu469Onp7xR5B/gFs/jD438lUKRYGUZSU7oD+k/drFX8ny+1Yy3g0TJsn+KAhGlmaq8NOxJU8dC7UDroDsjOkGn/r53NwNYTp0fpnu636GJZ/c9Qc4tIClaz/kfT0Cw4BvpqrEaDoz1L4OU0Jq/o7ZMNQLmZWWZU80K9fX4frdcHw1+8LSNQ3FmDUoeysFMpWBrBLrXd4YwFAvyEbDAB/xxvXENiCUbnA7vnGuUkggzhR7uOIOX8PjimbwOJGZ4jW/H5TNS8WQ9TEKGXWUCl2L+Bsr2rFwwPxI4UDjAPczZfFJjoZmxG0iYhTpgk8JglRu/UL7rLtSrvbuHPAtYY/uCG4+PwkV7M1qtJYMwXFUkR76pYqV5T3y/8/r5QRNBykdI/iVZpgBWNC9fgc9FE1QLm4k="
+  file: phash-$TARGET
+  on:
+    tags: true
+  provider: releases
+  skip_cleanup: true
+
+branches:
+  only:
+    - master
+    - /\d+\.\d+\.\d+\.\d+.*$/
