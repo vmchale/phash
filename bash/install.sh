@@ -8,7 +8,7 @@ getTarget() {
     then
         echo "phash-$(uname -m)-apple-darwin"
     else
-        echo "phash-$(uname -m)-unknown-linux"
+        echo "phash-$(uname -m)-unknown-linux-gnu"
     fi
 }
 
