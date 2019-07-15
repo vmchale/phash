@@ -10,7 +10,6 @@ median v = do
     Merge.sort v
     let l = MV.length v
     if odd l
-        -- TODO: unsafeRead for performance?
         then v `MV.read` ((l - 1) `div` 2)
         else do
             x0 <- v `MV.read` ((l `div` 2) - 1)
