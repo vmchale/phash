@@ -18,9 +18,10 @@ partitionM f (x:xs) = do
 
 parTraverse :: (FilePath -> IO ()) -- ^ Action to execute on files
             -> (FilePath -> IO Bool) -- ^ Filter on files
+            -> (FilePath -> IO Bool) -- ^ Filter on directories
             -> [FilePath] -- ^ Starting directories
             -> IO ()
-parTraverse act fileP dirs = do
+parTraverse act fileP dirP dirs = do
     ncpu <- getNumCapabilities
     withPool ncpu $ \pool ->
         parallel_ pool $ fmap (loopPool pool) dirs
@@ -29,5 +30,6 @@ parTraverse act fileP dirs = do
           loopPool pool fp = do
                 all' <- fmap (fp </>) <$> listDirectory fp
                 (dirs', files) <- partitionM doesDirectoryExist all'
+                dirs'' <- filterM dirP dirs'
                 files' <- filterM fileP files
-                parallel_ pool (fmap act files' ++ fmap (loopPool pool) dirs')
+                parallel_ pool (fmap act files' ++ fmap (loopPool pool) dirs'')
