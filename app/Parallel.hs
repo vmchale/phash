@@ -32,7 +32,7 @@ stepMap var fp = do
 pathMaps :: [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
 pathMaps fps = do
     total <- newTVarIO mempty
-    parTraverse (stepMap total) fileFilter fps
+    parTraverse (stepMap total) fileFilter (\_ -> pure True) fps
     readTVarIO total
 
     where fileFilter = pure . imgExtension . takeExtension
