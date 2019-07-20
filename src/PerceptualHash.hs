@@ -43,16 +43,13 @@ dct :: (Floating e, Array arr Y e) => Image arr Y e -> Image arr Y e
 dct img = dct32 |*| img |*| transpose dct32
 
 imgHash :: Image VU Y Double -> Word64
-imgHash = asWord64 . aboveMed . V.map d . toVector . crop8 . dct . size32 . meanFilter
-    where d :: Pixel Y Double -> Double
-          d (PixelY x) = x
+imgHash = asWord64 . aboveMed . V.map (\(PixelY x) -> x) . toVector . crop8 . dct . size32 . meanFilter
 
-          asWord64 :: V.Vector Bool -> Word64
+    where asWord64 :: V.Vector Bool -> Word64
           asWord64 = V.foldl' (\acc x -> (acc `shiftL` 1) .|. boolToWord64 x) 0
-
-          boolToWord64 :: Bool -> Word64
-          boolToWord64 False = 0
-          boolToWord64 True  = 1
+            where boolToWord64 :: Bool -> Word64
+                  boolToWord64 False = 0
+                  boolToWord64 True  = 1
 
           aboveMed v =
             let med = medianImmut v
