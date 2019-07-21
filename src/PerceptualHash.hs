@@ -23,11 +23,12 @@ dct32 = makeImage (32,32) gen
           n = 32
 
 idMat :: (Fractional e, Array arr X e) => Image arr X e
-idMat = makeImage (7,7) gen
-    where gen (i,j) = PixelX $ if i == j then 1/7 else 0
+idMat = makeImage (7,7)
+    (\_ -> PixelX (1/49))
 
 meanFilter :: (Fractional e, Array arr X e, Array arr cs e) => Image arr cs e -> Image arr cs e
 meanFilter = convolve Edge idMat
+{-# SCC meanFilter #-}
 
 size32 :: Array arr cs e => Image arr cs e -> Image arr cs e
 size32 = resize Bilinear Edge (32,32)
@@ -38,9 +39,11 @@ crop8 = crop (0,0) (8,8)
 medianImmut :: (Ord e, V.Unbox e, Fractional e) => V.Vector e -> e
 medianImmut v = runST $
     median =<< V.thaw v
+{-# SCC medianImmut #-}
 
 dct :: (Floating e, Array arr Y e) => Image arr Y e -> Image arr Y e
 dct img = dct32 |*| img |*| transpose dct32
+{-# SCC dct #-}
 
 imgHash :: Image VU Y Double -> Word64
 imgHash = asWord64 . aboveMed . V.map (\(PixelY x) -> x) . toVector . crop8 . dct . size32 . meanFilter
