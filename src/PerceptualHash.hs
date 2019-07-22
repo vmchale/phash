@@ -1,7 +1,10 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeFamilies     #-}
 
 module PerceptualHash ( imgHash
+                      , imgHashPar
                       , fileHash
+                      , fileHashPar
                       ) where
 
 import           Control.Applicative      (pure)
@@ -11,10 +14,10 @@ import qualified Data.Vector.Unboxed      as V
 import           Data.Word                (Word64)
 import           Graphics.Image           (Array, Bilinear (..), Border (Edge),
                                            Image, Pixel (PixelX, PixelY),
-                                           VU (..), X, Y, convolve, crop,
-                                           makeImage, readImageY, resize,
+                                           RPU (..), VU (..), X, Y, convolve,
+                                           crop, makeImage, readImageY, resize,
                                            transpose, (|*|))
-import           Graphics.Image.Interface (toVector)
+import           Graphics.Image.Interface (toManifest, toVector)
 import           Median                   (median)
 
 dct32 :: (Floating e, Array arr Y e) => Image arr Y e
@@ -39,24 +42,29 @@ crop8 = crop (0,0) (8,8)
 medianImmut :: (Ord e, V.Unbox e, Fractional e) => V.Vector e -> e
 medianImmut v = runST $
     median =<< V.thaw v
-{-# SCC medianImmut #-}
 
 dct :: (Floating e, Array arr Y e) => Image arr Y e -> Image arr Y e
 dct img = dct32 |*| img |*| transpose dct32
-{-# SCC dct #-}
+
+imgHashPar :: Image RPU Y Double -> Word64
+imgHashPar = asWord64 . aboveMed . V.map (\(PixelY x) -> x) . toVector . toManifest . crop8 . dct . size32 . meanFilter
 
 imgHash :: Image VU Y Double -> Word64
 imgHash = asWord64 . aboveMed . V.map (\(PixelY x) -> x) . toVector . crop8 . dct . size32 . meanFilter
 
-    where asWord64 :: V.Vector Bool -> Word64
-          asWord64 = V.foldl' (\acc x -> (acc `shiftL` 1) .|. boolToWord64 x) 0
-            where boolToWord64 :: Bool -> Word64
-                  boolToWord64 False = 0
-                  boolToWord64 True  = 1
+asWord64 :: V.Vector Bool -> Word64
+asWord64 = V.foldl' (\acc x -> (acc `shiftL` 1) .|. boolToWord64 x) 0
+    where boolToWord64 :: Bool -> Word64
+          boolToWord64 False = 0
+          boolToWord64 True  = 1
 
-          aboveMed v =
-            let med = medianImmut v
-            in V.map (<med) v
+aboveMed :: V.Vector Double -> V.Vector Bool
+aboveMed v =
+    let med = medianImmut v
+    in V.map (<med) v
 
 fileHash :: FilePath -> IO Word64
 fileHash = fmap imgHash . readImageY VU
+
+fileHashPar :: FilePath -> IO Word64
+fileHashPar = fmap imgHashPar . readImageY RPU
