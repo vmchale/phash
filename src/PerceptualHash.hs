@@ -48,6 +48,8 @@ dct img = dct32 |*| img |*| transpose dct32
 
 -- | Take advantage of parallelism when computing hash. This is faster than
 -- 'imgHash'
+--
+-- @since 0.1.1.0
 imgHashPar :: Image RPU Y Double -> Word64
 imgHashPar = asWord64 . aboveMed . V.map (\(PixelY x) -> x) . toVector . toManifest . crop8 . dct . size32 . meanFilter
 
@@ -70,5 +72,7 @@ fileHash = fmap imgHash . readImageY VU
 
 -- | Take advantage of parallelism when computing hash. This is faster than
 -- 'fileHash'
+--
+-- @since 0.1.1.0
 fileHashPar :: FilePath -> IO Word64
 fileHashPar = fmap imgHashPar . readImageY RPU
