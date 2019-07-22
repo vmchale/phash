@@ -5,6 +5,7 @@
   * Add `imgHashPar` and `fileHashPar`
   * Add `with-phash` flag to enable `ForeignHash` module and some benchmarks
     against pHash
+  * Significant performance improvements
 
 ## 0.1.0.2
 

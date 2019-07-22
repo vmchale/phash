@@ -7,14 +7,13 @@ module PerceptualHash ( imgHash
                       , fileHashPar
                       ) where
 
-import           Control.Applicative      (pure)
 import           Control.Monad.ST         (runST)
 import           Data.Bits                (shiftL, (.|.))
 import qualified Data.Vector.Unboxed      as V
 import           Data.Word                (Word64)
 import           Graphics.Image           (Array, Bilinear (..), Border (Edge),
                                            Image, Pixel (PixelX, PixelY),
-                                           RPU (..), VU (..), X, Y, convolve,
+                                           RPU (..), RSU (..), X, Y, convolve,
                                            crop, makeImage, readImageY, resize,
                                            transpose, (|*|))
 import           Graphics.Image.Interface (toManifest, toVector)
@@ -53,7 +52,7 @@ dct img = dct32 |*| img |*| transpose dct32
 imgHashPar :: Image RPU Y Double -> Word64
 imgHashPar = asWord64 . aboveMed . V.map (\(PixelY x) -> x) . toVector . toManifest . crop8 . dct . size32 . meanFilter
 
-imgHash :: Image VU Y Double -> Word64
+imgHash :: Image RSU Y Double -> Word64
 imgHash = asWord64 . aboveMed . V.map (\(PixelY x) -> x) . toVector . crop8 . dct . size32 . meanFilter
 
 asWord64 :: V.Vector Bool -> Word64
@@ -68,7 +67,7 @@ aboveMed v =
     in V.map (<med) v
 
 fileHash :: FilePath -> IO Word64
-fileHash = fmap imgHash . readImageY VU
+fileHash = fmap imgHash . readImageY RSU
 
 -- | Take advantage of parallelism when computing hash. This is faster than
 -- 'fileHash'
