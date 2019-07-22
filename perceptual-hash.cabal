@@ -36,7 +36,8 @@ library
         hip -any,
         vector-algorithms -any,
         vector -any,
-        primitive -any
+        primitive -any,
+        repa -any
 
     if flag(with-phash)
         exposed-modules:
