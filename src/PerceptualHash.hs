@@ -46,6 +46,8 @@ medianImmut v = runST $
 dct :: (Floating e, Array arr Y e) => Image arr Y e -> Image arr Y e
 dct img = dct32 |*| img |*| transpose dct32
 
+-- | Take advantage of parallelism when computing hash. This is faster than
+-- 'imgHash'
 imgHashPar :: Image RPU Y Double -> Word64
 imgHashPar = asWord64 . aboveMed . V.map (\(PixelY x) -> x) . toVector . toManifest . crop8 . dct . size32 . meanFilter
 
@@ -66,5 +68,7 @@ aboveMed v =
 fileHash :: FilePath -> IO Word64
 fileHash = fmap imgHash . readImageY VU
 
+-- | Take advantage of parallelism when computing hash. This is faster than
+-- 'fileHash'
 fileHashPar :: FilePath -> IO Word64
 fileHashPar = fmap imgHashPar . readImageY RPU
