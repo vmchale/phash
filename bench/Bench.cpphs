@@ -4,19 +4,15 @@ import           Criterion.Main
 #ifdef FOREIGN_PHASH
 import           ForeignHash    (foreignFileHash)
 #endif
-import           Graphics.Image (VU (..), RSU (..), readImageY)
-import           PerceptualHash (fileHash, fileHashPar, imgHash)
+import           PerceptualHash (fileHash)
 
 main :: IO ()
 main =
     defaultMain [ bgroup "fileHash"
                       [ bench "cat.png" $ nfIO (fileHash catPath) ]
-                , bgroup "fileHashPar"
-                      [ bench "cat.png" $ nfIO (fileHashPar catPath) ]
 #ifdef FOREIGN_PHASH
                 , bgroup "foreignHash"
                       [ bench "cat.png" $ nfIO (foreignFileHash catPath) ]
 #endif
                 ]
-    where img = readImageY RSU catPath
-          catPath = "demo-data/cat.png"
+    where catPath = "demo-data/cat.png"

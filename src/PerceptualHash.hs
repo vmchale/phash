@@ -2,9 +2,7 @@
 {-# LANGUAGE TypeFamilies     #-}
 
 module PerceptualHash ( imgHash
-                      , imgHashPar
                       , fileHash
-                      , fileHashPar
                       ) where
 
 import           Control.Monad.ST         (runST)
@@ -45,13 +43,6 @@ medianImmut v = runST $
 dct :: (Floating e, Array arr Y e) => Image arr Y e -> Image arr Y e
 dct img = dct32 |*| img |*| transpose dct32
 
--- | Take advantage of parallelism when computing hash. This is faster than
--- 'imgHash'
---
--- @since 0.1.1.0
-imgHashPar :: Image RPU Y Double -> Word64
-imgHashPar = asWord64 . aboveMed . V.map (\(PixelY x) -> x) . toVector . toManifest . crop8 . dct . size32 . meanFilter
-
 imgHash :: Image RSU Y Double -> Word64
 imgHash = asWord64 . aboveMed . V.map (\(PixelY x) -> x) . toVector . crop8 . dct . size32 . meanFilter
 
@@ -68,10 +59,3 @@ aboveMed v =
 
 fileHash :: FilePath -> IO Word64
 fileHash = fmap imgHash . readImageY RSU
-
--- | Take advantage of parallelism when computing hash. This is faster than
--- 'fileHash'
---
--- @since 0.1.1.0
-fileHashPar :: FilePath -> IO Word64
-fileHashPar = fmap imgHashPar . readImageY RPU

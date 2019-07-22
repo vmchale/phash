@@ -88,8 +88,7 @@ benchmark phash-bench
     build-depends:
         base -any,
         perceptual-hash -any,
-        criterion -any,
-        hip -any
+        criterion -any
 
     if flag(with-phash)
         pkgconfig-depends: pHash -any
