@@ -1,6 +1,9 @@
 module Main (main) where
 
 import           Criterion.Main
+#ifdef FOREIGN_PHASH
+import           ForeignHash    (foreignFileHash)
+#endif
 import           Graphics.Image (VU (..), readImageY)
 import           PerceptualHash (fileHash, fileHashPar, imgHash)
 
@@ -13,6 +16,10 @@ main =
                       [ bench "cat.png" $ nfIO (fileHash catPath) ]
                 , bgroup "fileHashPar"
                       [ bench "cat.png" $ nfIO (fileHashPar catPath) ]
+#ifdef FOREIGN_PHASH
+                , bgroup "foreignHash"
+                      [ bench "cat.png" $ nfIO (foreignFileHash catPath) ]
+#endif
                 ]
     where img = readImageY VU catPath
           catPath = "demo-data/cat.png"
