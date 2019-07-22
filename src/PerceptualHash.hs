@@ -11,10 +11,10 @@ import qualified Data.Vector.Unboxed      as V
 import           Data.Word                (Word64)
 import           Graphics.Image           (Array, Bilinear (..), Border (Edge),
                                            Image, Pixel (PixelX, PixelY),
-                                           RPU (..), RSU (..), X, Y, convolve,
+                                           RSU (..), X, Y, convolve,
                                            crop, makeImage, readImageY, resize,
                                            transpose, (|*|))
-import           Graphics.Image.Interface (toManifest, toVector)
+import           Graphics.Image.Interface (toVector)
 import           Median                   (median)
 
 dct32 :: (Floating e, Array arr Y e) => Image arr Y e
