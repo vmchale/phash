@@ -6,7 +6,8 @@
 [![Hackage](https://img.shields.io/hackage/v/perceptual-hash.svg)](http://hackage.haskell.org/package/perceptual-hash)
 [![Dependencies of latest version on Hackage](https://img.shields.io/hackage-deps/v/perceptual-hash.svg)](https://hackage.haskell.org/package/perceptual-hash)
 
-This is a command-line tool to detect (potential) duplicate images.
+This is a command-line tool to detect (potential) duplicate images. It also
+contains a Haskell [library](http://hackage.haskell.org/package/perceptual-hash).
 
 ## Use
 

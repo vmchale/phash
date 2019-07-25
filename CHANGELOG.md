@@ -2,7 +2,10 @@
 
 ## 0.1.1.0
 
-  * Add `imgHashPar` and `fileHashPar`
+  * Add `with-phash` flag to enable `ForeignHash` module and benchmarks
+    against pHash
+  * Significant performance improvements
+  * Generalized signature for `imgHash`
 
 ## 0.1.0.2
 

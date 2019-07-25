@@ -1,0 +1,18 @@
+module Main (main) where
+
+import           Criterion.Main
+#ifdef FOREIGN_PHASH
+import           ForeignHash    (foreignFileHash)
+#endif
+import           PerceptualHash (fileHash)
+
+main :: IO ()
+main =
+    defaultMain [ bgroup "fileHash"
+                      [ bench "cat.png" $ nfIO (fileHash catPath) ]
+#ifdef FOREIGN_PHASH
+                , bgroup "foreignHash"
+                      [ bench "cat.png" $ nfIO (foreignFileHash catPath) ]
+#endif
+                ]
+    where catPath = "demo-data/cat.png"
