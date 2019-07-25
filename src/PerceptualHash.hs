@@ -10,11 +10,11 @@ import           Data.Array.Repa.Eval     (Elt)
 import           Data.Bits                (shiftL, (.|.))
 import qualified Data.Vector.Unboxed      as V
 import           Data.Word                (Word64)
-import           Graphics.Image           (Array, Bilinear (..), Border (Edge),
-                                           Image, Pixel (PixelX, PixelY),
-                                           RSU (..), X, Y, convolve, crop,
-                                           makeImage, readImageY, resize,
-                                           transpose, (|*|))
+import           Graphics.Image           (Array, Bilinear (..),
+                                           Border (Edge, Reflect), Image,
+                                           Pixel (PixelX, PixelY), RSU (..), X,
+                                           Y, convolve, crop, makeImage,
+                                           readImageY, resize, transpose, (|*|))
 import           Graphics.Image.Interface (Elevator, toVector)
 import           Median                   (median)
 
@@ -29,8 +29,8 @@ idMat = makeImage (7,7)
 
 {-# INLINE meanFilter #-}
 meanFilter :: (Fractional e, Array arr X e, Array arr cs e) => Image arr cs e -> Image arr cs e
-meanFilter = convolve Edge idMat
-{-# SCC meanFilter #-}
+meanFilter = convolve Reflect idMat
+-- {-# SCC meanFilter #-}
 
 {-# INLINE size32 #-}
 size32 :: Array arr cs e => Image arr cs e -> Image arr cs e

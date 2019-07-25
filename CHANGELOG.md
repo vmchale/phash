@@ -1,5 +1,9 @@
 # phash
 
+## 0.1.1.1
+
+  * Use mirror for convolutions
+
 ## 0.1.1.0
 
   * Add `with-phash` flag to enable `ForeignHash` module and benchmarks
