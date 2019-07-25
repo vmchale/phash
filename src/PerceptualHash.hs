@@ -26,7 +26,7 @@ dct32 = makeImage (32,32) gen
           n = 32
 
 idMat :: (Fractional e, Array arr X e) => Image arr X e
-idMat = makeImage (7,7)
+idMat = makeImage (5,5)
     (\_ -> PixelX (1/49))
 
 meanFilter :: (Fractional e, Array arr X e, Array arr cs e) => Image arr cs e -> Image arr cs e
