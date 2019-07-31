@@ -80,7 +80,7 @@ executable phash
 benchmark phash-bench
     type: exitcode-stdio-1.0
     main-is: Bench.hs
-    build-tools: cpphs -any
+    build-tool-depends: cpphs:cpphs -any
     hs-source-dirs: bench
     default-language: Haskell2010
     ghc-options: -threaded -rtsopts "-with-rtsopts=-N -qg" -Wall
