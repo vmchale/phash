@@ -1,3 +1,4 @@
+.hspec-failures
 .ghc.environment.*
 tags
 dist
