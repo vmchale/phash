@@ -128,7 +128,8 @@ benchmark phash-bench
     build-depends:
         base -any,
         perceptual-hash -any,
-        criterion -any
+        criterion -any,
+        filepath -any
 
     if flag(llvm)
         ghc-options: -fllvm
