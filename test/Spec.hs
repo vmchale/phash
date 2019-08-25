@@ -1,16 +1,7 @@
 -- vim: syntax=hspec
 
-import           Data.Foldable  (traverse_)
-import           ForeignHash    (foreignFileHash)
 import           PerceptualHash (fileHash)
 import           Test.Hspec
-
-checkForeign :: FilePath -> SpecWith ()
-checkForeign fp =
-    parallel $ it ("should return the same hash (" ++ fp ++ ")") $ do
-        actual <- fileHash fp
-        expected <- foreignFileHash fp
-        actual `shouldBe` expected
 
 main :: IO ()
 main = hspec $
@@ -25,9 +16,3 @@ main = hspec $
             actual <- fileHash "demo-data/cat.png"
             expected <- fileHash "demo-data/frog.png"
             actual `shouldSatisfy` (/= expected)
-
-        traverse_ checkForeign
-            [ "demo-data/frog.jpeg"
-            , "demo-data/frog.png"
-            , "demo-data/cat.png"
-            ]
