@@ -1,3 +1,4 @@
+---
 - package:
   - name: perceptual-hash
   - section:
@@ -5,4 +6,3 @@
     - message:
       - name: Module not compiled
       - module: ForeignHash
-
