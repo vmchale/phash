@@ -24,8 +24,7 @@ dct32 = makeImage (32,32) gen
           n = 32
 
 idMat :: (Fractional e, Array arr X e) => Image arr X e
-idMat = makeImage (7,7)
-    (\_ -> PixelX (1/49))
+idMat = makeImage (7,7) (\_ -> PixelX (1/49))
 
 {-# INLINE meanFilter #-}
 meanFilter :: (Fractional e, Array arr X e, Array arr cs e) => Image arr cs e -> Image arr cs e
@@ -46,7 +45,6 @@ dct :: (Floating e, Array arr Y e) => Image arr Y e -> Image arr Y e
 dct img = dct32 |*| img |*| transpose dct32
 
 {-# INLINE imgHash #-}
-{-# SPECIALIZE imgHash :: Image RSU Y Double -> Word64 #-}
 imgHash :: (Ord e, Floating e, Array arr Y e, Array arr X e, V.Vector (Hip.Vector arr) Bool, V.Vector (Hip.Vector arr) e) => Image arr Y e -> Word64
 imgHash = asWord64 . aboveMed . V.map (\(PixelY x) -> x) . toVector . crop8 . dct . size32 . meanFilter
 
