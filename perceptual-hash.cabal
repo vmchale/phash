@@ -11,6 +11,10 @@ description:
     Find similar images using perceptual hashes
 category: Application, CommandLine, Images
 build-type: Simple
+data-files:
+  demo-data/cat.png
+  demo-data/frog.jpeg
+  demo-data/frog.png
 extra-doc-files: README.md
                  CHANGELOG.md
 
