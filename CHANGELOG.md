@@ -3,6 +3,7 @@
 ## 0.1.1.1
 
   * Use mirror for convolutions
+  * Add `llvm` cabal flag
 
 ## 0.1.1.0
 

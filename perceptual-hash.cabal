@@ -1,6 +1,6 @@
 cabal-version: 2.0
 name: perceptual-hash
-version: 0.1.1.0
+version: 0.1.1.1
 license: BSD3
 license-file: LICENSE
 copyright: Copyright: (c) 2019 Vanessa McHale
@@ -21,6 +21,8 @@ source-repository head
 flag with-phash
     description:
         Use FFI bindings to pHash
+    default: False
+    manual: True
 
 flag llvm
     description:
