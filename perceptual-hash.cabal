@@ -46,7 +46,7 @@ library
         repa -any
 
     if flag(llvm)
-        ghc-options: -fllvm -optl-flto
+        ghc-options: -fllvm
 
     if flag(with-phash)
         pkgconfig-depends: pHash -any
@@ -83,7 +83,7 @@ executable phash
         stm >=2.3
 
     if flag(llvm)
-        ghc-options: -fllvm -optl-flto
+        ghc-options: -fllvm
 
     if impl(ghc >=8.0)
         ghc-options: -Wincomplete-uni-patterns -Wincomplete-record-updates
@@ -125,7 +125,7 @@ benchmark phash-bench
         criterion -any
 
     if flag(llvm)
-        ghc-options: -fllvm -optl-flto
+        ghc-options: -fllvm
 
     if flag(with-phash)
         cpp-options: -DFOREIGN_PHASH
