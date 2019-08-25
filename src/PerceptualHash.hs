@@ -9,11 +9,9 @@ import           Control.Monad.ST         (runST)
 import           Data.Bits                (shiftL, (.|.))
 import qualified Data.Vector.Generic      as V
 import           Data.Word                (Word64)
-import           Graphics.Image           (Array, Bilinear (..),
-                                           Border (Edge, Reflect), Image,
-                                           Pixel (PixelX, PixelY), RSU (..), X,
-                                           Y, convolve, crop, makeImage,
-                                           readImageY, resize, transpose, (|*|))
+import           Graphics.Image           (Array, Bilinear (..), Border (Edge, Reflect), Image,
+                                           Pixel (PixelX, PixelY), RSU (..), X, Y, convolve, crop,
+                                           makeImage, readImageY, resize, transpose, (|*|))
 import           Graphics.Image.Interface (toVector)
 import qualified Graphics.Image.Interface as Hip
 import           Median                   (median)
