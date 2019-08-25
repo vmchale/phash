@@ -22,6 +22,12 @@ flag with-phash
     description:
         Use FFI bindings to pHash
 
+flag llvm
+    description:
+        Use LLVM backend to GHC rather than NCG
+    default: False
+    manual: True
+
 library
     exposed-modules:
         PerceptualHash
@@ -38,6 +44,9 @@ library
         vector -any,
         primitive -any,
         repa -any
+
+    if flag(llvm)
+        ghc-options: -fllvm -optl-flto
 
     if flag(with-phash)
         pkgconfig-depends: pHash -any
@@ -73,6 +82,9 @@ executable phash
         par-traverse >=0.2.0.0,
         stm >=2.3
 
+    if flag(llvm)
+        ghc-options: -fllvm -optl-flto
+
     if impl(ghc >=8.0)
         ghc-options: -Wincomplete-uni-patterns -Wincomplete-record-updates
                      -Wredundant-constraints -Widentities
@@ -90,9 +102,6 @@ test-suite perceptual-hash-test
         base -any,
         perceptual-hash -any,
         hspec -any
-
-    if !flag(with-phash)
-        buildable: False
 
     if impl(ghc >=8.0)
         ghc-options: -Wincomplete-uni-patterns -Wincomplete-record-updates
@@ -114,6 +123,9 @@ benchmark phash-bench
         base -any,
         perceptual-hash -any,
         criterion -any
+
+    if flag(llvm)
+        ghc-options: -fllvm -optl-flto
 
     if flag(with-phash)
         cpp-options: -DFOREIGN_PHASH
