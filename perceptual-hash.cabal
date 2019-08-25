@@ -1,6 +1,6 @@
 cabal-version: 2.0
 name: perceptual-hash
-version: 0.1.1.1
+version: 0.1.2.0
 license: BSD3
 license-file: LICENSE
 copyright: Copyright: (c) 2019 Vanessa McHale
@@ -12,9 +12,9 @@ description:
 category: Application, CommandLine, Images
 build-type: Simple
 data-files:
-  demo-data/cat.png
-  demo-data/frog.jpeg
-  demo-data/frog.png
+    demo-data/cat.png
+    demo-data/frog.jpeg
+    demo-data/frog.png
 extra-doc-files: README.md
                  CHANGELOG.md
 
