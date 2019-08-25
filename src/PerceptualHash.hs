@@ -29,8 +29,7 @@ idMat = makeImage (7,7)
 
 {-# INLINE meanFilter #-}
 meanFilter :: (Fractional e, Array arr X e, Array arr cs e) => Image arr cs e -> Image arr cs e
-meanFilter = convolve Reflect idMat
--- {-# SCC meanFilter #-}
+meanFilter = {-# SCC "mean filter" #-} convolve Reflect idMat
 
 {-# INLINE size32 #-}
 size32 :: Array arr cs e => Image arr cs e -> Image arr cs e
