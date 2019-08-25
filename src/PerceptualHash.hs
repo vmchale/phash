@@ -43,6 +43,10 @@ dct :: (Floating e, Array arr Y e) => Image arr Y e -> Image arr Y e
 dct img = dct32 |*| img |*| transpose dct32
 
 {-# INLINE imgHash #-}
+-- | DCT based hash. See
+-- [here](https://www.phash.org/docs/pubs/thesis_zauner.pdf).
+--
+-- It is suggested that you use this with the Repa backend.
 imgHash :: (Ord e, Floating e, Array arr Y e, Array arr X e, V.Vector (Hip.Vector arr) Bool, V.Vector (Hip.Vector arr) e) => Image arr Y e -> Word64
 imgHash = asWord64 . aboveMed . V.map (\(PixelY x) -> x) . toVector . crop8 . dct . size32 . meanFilter
 
