@@ -1,8 +1,7 @@
 module Parallel ( pathMaps ) where
 
 import           Control.Concurrent.STM      (atomically)
-import           Control.Concurrent.STM.TVar (TVar, modifyTVar', newTVarIO,
-                                              readTVarIO)
+import           Control.Concurrent.STM.TVar (TVar, modifyTVar', newTVarIO, readTVarIO)
 import           Data.List.NonEmpty          (NonEmpty (..), (<|))
 import qualified Data.Map                    as M
 import           Data.Word                   (Word64)
@@ -36,4 +35,3 @@ pathMaps fps = do
     readTVarIO total
 
     where fileFilter = pure . imgExtension . takeExtension
-

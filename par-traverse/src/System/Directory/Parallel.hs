@@ -3,8 +3,7 @@ module System.Directory.Parallel ( parTraverse ) where
 import           Control.Concurrent                  (getNumCapabilities)
 import           Control.Concurrent.ParallelIO.Local (Pool, parallel_, withPool)
 import           Control.Monad                       (filterM)
-import           System.Directory                    (doesDirectoryExist,
-                                                      listDirectory)
+import           System.Directory                    (doesDirectoryExist, listDirectory)
 import           System.FilePath                     ((</>))
 
 partitionM :: Monad m => (a -> m Bool) -> [a] -> m ([a], [a])
