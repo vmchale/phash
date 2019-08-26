@@ -7,4 +7,3 @@ dist-*
 *.aux
 *.hp
 *.eventlog
-.shake

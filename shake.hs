@@ -10,7 +10,7 @@ import           Development.Shake.FileDetect
 import           Development.Shake.Linters
 
 main :: IO ()
-main = shakeArgs shakeOptions { shakeFiles = ".shake", shakeLint = Just LintBasic, shakeChange = ChangeModtimeAndDigestInput } $ do
+main = shakeArgs shakeOptions { shakeFiles = "dist-newstyle", shakeLint = Just LintBasic, shakeChange = ChangeModtimeAndDigestInput } $ do
     want [ "lint" ]
 
     "lint" ~> do
