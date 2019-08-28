@@ -11,7 +11,7 @@ import qualified Data.Vector.Generic      as V
 import           Data.Word                (Word64)
 import           Graphics.Image           (Array, Bilinear (..), Border (Edge, Reflect), Image,
                                            Pixel (PixelX, PixelY), RSU (..), X, Y, convolve, crop,
-                                           makeImage, readImageY, resize, transpose, (|*|))
+                                           makeImage, readImage, resize, transpose, (|*|))
 import           Graphics.Image.Interface (toVector)
 import qualified Graphics.Image.Interface as Hip
 import           Median                   (median)
@@ -61,5 +61,5 @@ aboveMed v =
     let med = medianImmut v
     in V.map (<med) v
 
-fileHash :: FilePath -> IO Word64
-fileHash = fmap imgHash . readImageY RSU
+fileHash :: FilePath -> IO (Either String Word64)
+fileHash = fmap (fmap (imgHash :: Image RSU Y Double -> Word64)) . readImage

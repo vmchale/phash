@@ -4,7 +4,6 @@ module Parallel ( pathMaps ) where
 
 import           Control.Concurrent.STM      (atomically)
 import           Control.Concurrent.STM.TVar (TVar, modifyTVar', newTVarIO, readTVarIO)
-import           Control.Exception           (SomeException, catch)
 import           Data.Functor                (($>))
 import           Data.List.NonEmpty          (NonEmpty (..), (<|))
 import qualified Data.Map                    as M
@@ -19,9 +18,13 @@ imgExtension ".jpeg" = True
 imgExtension ".png"  = True
 imgExtension ".gif"  = True
 imgExtension ".ppm"  = True
+imgExtension ".pbm"  = True
+imgExtension ".pgm"  = True
 imgExtension ".hdr"  = True
+imgExtension ".pic"  = True
 imgExtension ".bmp"  = True
 imgExtension ".TGA"  = True
+imgExtension ".tga"  = True
 imgExtension ".tif"  = True
 imgExtension ".tiff" = True
 imgExtension _       = False
@@ -29,18 +32,18 @@ imgExtension _       = False
 insertHash :: FilePath -> IO (M.Map Word64 (NonEmpty FilePath) -> M.Map Word64 (NonEmpty FilePath))
 insertHash fp = do
     hash <- fileHash fp
-    pure $ \hashes ->
-        case M.lookup hash hashes of
-            Just others -> M.insert hash (fp <| others) hashes
-            Nothing     -> M.insert hash (fp :| []) hashes
+    case hash of
+        Right x ->
+            pure $ \hashes ->
+                case M.lookup x hashes of
+                    Just others -> M.insert x (fp <| others) hashes
+                    Nothing     -> M.insert x (fp :| []) hashes
+        Left err -> putStrLn ("WARNING: skipping " ++ fp ++ "\n" ++ err) $> id
 
 stepMap :: TVar (M.Map Word64 (NonEmpty FilePath)) -> FilePath -> IO ()
 stepMap var fp = do
-    mod' <- catchWith fp $ insertHash fp
+    mod' <- insertHash fp
     atomically $ modifyTVar' var mod'
-
-    where catchWith fp' act = catch act $ \(_ :: SomeException) ->
-            putStrLn ("WARNING: skipping " ++ fp') $> id
 
 pathMaps :: [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
 pathMaps fps = do
