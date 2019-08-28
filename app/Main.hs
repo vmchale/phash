@@ -36,4 +36,4 @@ run (fps, debug) = do
     let displayF = if debug
         then displayDebug
         else displayAll . filterDup
-    putStrLn . displayF =<< pathMaps debug fps
+    putStrLn . displayF =<< pathMaps fps
