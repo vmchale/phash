@@ -1,8 +1,11 @@
+{-# LANGUAGE ScopedTypeVariables #-}
+
 module Parallel ( pathMaps ) where
 
 import           Control.Concurrent.STM      (atomically)
 import           Control.Concurrent.STM.TVar (TVar, modifyTVar', newTVarIO, readTVarIO)
-import           Control.Monad               (when)
+import           Control.Exception           (SomeException, catch)
+import           Data.Functor                (($>))
 import           Data.List.NonEmpty          (NonEmpty (..), (<|))
 import qualified Data.Map                    as M
 import           Data.Word                   (Word64)
@@ -31,17 +34,18 @@ insertHash fp = do
             Just others -> M.insert hash (fp <| others) hashes
             Nothing     -> M.insert hash (fp :| []) hashes
 
-stepMap :: Bool -> TVar (M.Map Word64 (NonEmpty FilePath)) -> FilePath -> IO ()
-stepMap dbg var fp = do
-    when dbg $
-        putStrLn fp
-    mod' <- insertHash fp
+stepMap :: TVar (M.Map Word64 (NonEmpty FilePath)) -> FilePath -> IO ()
+stepMap var fp = do
+    mod' <- catchWith fp $ insertHash fp
     atomically $ modifyTVar' var mod'
 
-pathMaps :: Bool -> [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
-pathMaps dbg fps = do
+    where catchWith fp' act = catch act $ \(_ :: SomeException) ->
+            putStrLn ("WARNING: skipping " ++ fp') $> id
+
+pathMaps :: [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
+pathMaps fps = do
     total <- newTVarIO mempty
-    parTraverse (stepMap dbg total) fileFilter (\_ -> pure True) fps
+    parTraverse (stepMap total) fileFilter (\_ -> pure True) fps
     readTVarIO total
 
     where fileFilter = pure . imgExtension . takeExtension

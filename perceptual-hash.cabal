@@ -75,6 +75,7 @@ executable phash
 
     autogen-modules:  Paths_perceptual_hash
     default-language: Haskell2010
+    other-extensions: ScopedTypeVariables
     ghc-options:      -Wall -threaded -rtsopts "-with-rtsopts=-N -qg"
     build-depends:
         base >=4.9 && <5,
