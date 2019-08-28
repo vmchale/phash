@@ -1,5 +1,15 @@
 # phash
 
+## 0.1.2.0
+
+  * Add `demo-data` field so tests don't fail
+  * Generalize `imgHash` signature
+
+## 0.1.1.1
+
+  * Use mirror for convolutions
+  * Add `llvm` cabal flag
+
 ## 0.1.1.0
 
   * Add `with-phash` flag to enable `ForeignHash` module and benchmarks

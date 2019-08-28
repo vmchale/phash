@@ -8,7 +8,11 @@ getTarget() {
     then
         echo "phash-$(uname -m)-apple-darwin"
     else
-        echo "phash-$(uname -m)-unknown-linux-gnu"
+        glibc_version="$(ldd --version | grep -E '[0-9]\.[0-9]+$' -o)"
+        min_version=2.27
+        [ "$min_version" = "$(printf '%s\n%s' "$glibc_version" "$min_version" | sort -V | head -n1)" ] \
+            && echo "phash-$(uname -m)-unknown-linux-gnu" \
+            || echo "phash-$(uname -m)-linux-musl"
     fi
 }
 

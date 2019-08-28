@@ -3,16 +3,16 @@
 build: off
 
 before_test:
-  - choco install ghc
-  - choco install cabal
+- choco install ghc
+- choco install cabal
 
 test_script:
-  - refreshenv
-  - cabal new-update
-  - cabal new-build
-  - ps: $directory = Get-ChildItem . -name -recurse phash.exe
-  - ps: Copy-Item $directory phash-x86_64-pc-windows.exe
-  - ps: Push-AppveyorArtifact phash-x86_64-pc-windows.exe
+- refreshenv
+- cabal new-update
+- cabal new-build
+- ps: $directory = Get-ChildItem . -name -recurse phash.exe
+- ps: Copy-Item $directory phash-x86_64-pc-windows.exe
+- ps: Push-AppveyorArtifact phash-x86_64-pc-windows.exe
 
 deploy:
   artifacts: phash-x86_64-pc-windows.exe
@@ -24,5 +24,5 @@ deploy:
 
 branches:
   only:
-    - master
-    - /\d+\.\d+\.\d+\.\d+.*$/
+  - master
+  - /\d+\.\d+\.\d+\.\d+.*$/

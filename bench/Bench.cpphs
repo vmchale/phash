@@ -1,18 +1,25 @@
 module Main (main) where
 
 import           Criterion.Main
+import           Data.Word       (Word64)
 #ifdef FOREIGN_PHASH
-import           ForeignHash    (foreignFileHash)
+import           ForeignHash     (foreignFileHash)
 #endif
-import           PerceptualHash (fileHash)
+import           PerceptualHash  (fileHash)
+import           System.FilePath (takeFileName)
+
+mkBGroup :: String -> (FilePath -> IO Word64) -> Benchmark
+mkBGroup str f = bgroup str (toBench <$> [catPath, frogJpeg, frogPng])
+
+    where toBench fp = bench (takeFileName fp) $ nfIO (f fp)
+          catPath = "demo-data/cat.png"
+          frogJpeg = "demo-data/frog.jpeg"
+          frogPng = "demo-data/frog.png"
 
 main :: IO ()
 main =
-    defaultMain [ bgroup "fileHash"
-                      [ bench "cat.png" $ nfIO (fileHash catPath) ]
+    defaultMain [ mkBGroup "fileHash" fileHash
 #ifdef FOREIGN_PHASH
-                , bgroup "foreignHash"
-                      [ bench "cat.png" $ nfIO (foreignFileHash catPath) ]
+                , mkBGroup "foreignHash" foreignFileHash
 #endif
                 ]
-    where catPath = "demo-data/cat.png"

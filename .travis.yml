@@ -3,52 +3,52 @@ sudo: false
 language: c
 cache:
   directories:
-    - $HOME/.cabal
-    - $HOME/.ghc
+  - $HOME/.cabal
+  - $HOME/.ghc
 addons:
   apt:
     packages:
-      - libgmp3-dev
+    - libgmp3-dev
 matrix:
   include:
 
-    - env: TARGET=x86_64-unknown-linux-gnu
-      addons:
-        apt:
-          update: true
-          sources:
-            - hvr-ghc
-          packages:
-            - ghc-8.6.5
-            - cabal-install-2.4
+  - env: TARGET=x86_64-unknown-linux-gnu
+    addons:
+      apt:
+        update: true
+        sources:
+        - hvr-ghc
+        packages:
+        - ghc-8.6.5
+        - cabal-install-2.4
 
-    - env: TARGET=x86_64-apple-darwin
-      os: osx
+  - env: TARGET=x86_64-apple-darwin
+    os: osx
 
 before_install:
-  - |
-    if [ `uname` = "Darwin" ]
-    then
-      brew install cabal-install
-      cabal new-update
-    else
-      export PATH=/opt/ghc/bin:$PATH
-      cabal new-update
-    fi
-  - export PATH=$HOME/.cabal/bin:$PATH
+- |
+  if [ `uname` = "Darwin" ]
+  then
+    brew install cabal-install
+    cabal new-update
+  else
+    export PATH=/opt/ghc/bin:$PATH
+    cabal new-update
+  fi
+- export PATH=$HOME/.cabal/bin:$PATH
 
 script:
-  - cabal new-build
-  - |
-    if [ `uname` = "Darwin" ]
-    then
-      export BINPATH="$(find dist-newstyle/ -name phash -perm 755 | tail -n1)"
-    else
-      export BINPATH="$(find dist-newstyle/ -name phash -executable | tail -n1)"
-    fi
-  - echo $BINPATH
-  - mv $BINPATH phash-$TARGET
-  - strip phash-$TARGET
+- cabal new-build
+- |
+  if [ `uname` = "Darwin" ]
+  then
+    export BINPATH="$(find dist-newstyle/ -name phash -perm 755 | tail -n1)"
+  else
+    export BINPATH="$(find dist-newstyle/ -name phash -executable | tail -n1)"
+  fi
+- echo $BINPATH
+- mv $BINPATH phash-$TARGET
+- strip phash-$TARGET
 
 deploy:
   api_key:
@@ -61,5 +61,5 @@ deploy:
 
 branches:
   only:
-    - master
-    - /\d+\.\d+\.\d+\.\d+.*$/
+  - master
+  - /\d+\.\d+\.\d+\.\d+.*$/
