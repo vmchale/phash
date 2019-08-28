@@ -1,9 +1,10 @@
 # phash
 
-## 0.1.2.1
+## 0.1.3.0
 
   * CLI tool now supports several more image formats
   * `--debug` flag more useful
+  * `fileHash` now returns an `Either String`
 
 ## 0.1.2.0
 
