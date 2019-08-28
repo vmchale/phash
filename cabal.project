@@ -2,3 +2,6 @@ packages: ./
         , par-traverse
 
 max-backjumps: 160000000
+
+allow-newer:
+  repa:base
