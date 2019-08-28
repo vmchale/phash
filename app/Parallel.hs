@@ -4,7 +4,7 @@ module Parallel ( pathMaps ) where
 
 import           Control.Concurrent.STM      (atomically)
 import           Control.Concurrent.STM.TVar (TVar, modifyTVar', newTVarIO, readTVarIO)
-import           Control.Exception           (SomeException, catch)
+import           Control.Exception           (SomeException, handle)
 import           Data.Functor                (($>))
 import           Data.List.NonEmpty          (NonEmpty (..), (<|))
 import qualified Data.Map                    as M
@@ -39,7 +39,7 @@ stepMap var fp = do
     mod' <- catchWith fp $ insertHash fp
     atomically $ modifyTVar' var mod'
 
-    where catchWith fp' act = catch act $ \(_ :: SomeException) ->
+    where catchWith fp' = handle $ \(_ :: SomeException) ->
             putStrLn ("WARNING: skipping " ++ fp') $> id
 
 pathMaps :: [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
