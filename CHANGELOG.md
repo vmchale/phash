@@ -1,5 +1,10 @@
 # phash
 
+## 0.1.2.1
+
+  * CLI tool now supports several more image formats
+  * `--debug` flag more useful
+
 ## 0.1.2.0
 
   * Add `demo-data` field so tests don't fail
