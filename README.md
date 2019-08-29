@@ -39,5 +39,5 @@ Download [cabal-install](https://www.haskell.org/cabal/download.html) and
 [GHC](https://www.haskell.org/ghc/download.html). Then:
 
 ```
-cabal new-install perceptual-hash
+cabal install perceptual-hash -w ghc-8.6.5
 ```
