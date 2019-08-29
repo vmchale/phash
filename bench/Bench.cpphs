@@ -1,14 +1,14 @@
 module Main (main) where
 
+import           Control.DeepSeq (NFData)
 import           Criterion.Main
-import           Data.Word       (Word64)
 #ifdef FOREIGN_PHASH
 import           ForeignHash     (foreignFileHash)
 #endif
 import           PerceptualHash  (fileHash)
 import           System.FilePath (takeFileName)
 
-mkBGroup :: String -> (FilePath -> IO Word64) -> Benchmark
+mkBGroup :: NFData a => String -> (FilePath -> IO a) -> Benchmark
 mkBGroup str f = bgroup str (toBench <$> [catPath, frogJpeg, frogPng])
 
     where toBench fp = bench (takeFileName fp) $ nfIO (f fp)

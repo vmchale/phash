@@ -131,7 +131,8 @@ benchmark phash-bench
         base -any,
         perceptual-hash -any,
         criterion -any,
-        filepath -any
+        filepath -any,
+        deepseq -any
 
     if flag(llvm)
         ghc-options: -fllvm
