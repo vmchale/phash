@@ -30,7 +30,7 @@ before_install:
   if [ `uname` = "Darwin" ]
   then
     brew install cabal-install
-    cabal new-update
+    cabal update
   else
     export PATH=/opt/ghc/bin:$PATH
     cabal update
