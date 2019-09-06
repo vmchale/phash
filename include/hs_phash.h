@@ -1,1 +1,1 @@
-uint64_t hs_phash(const char*);
+uint64_t hs_phash(const char *);
