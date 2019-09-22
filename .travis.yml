@@ -29,6 +29,7 @@ before_install:
 - |
   if [ `uname` = "Darwin" ]
   then
+    brew install ghc@8.6
     brew install cabal-install
     cabal update
   else
@@ -38,7 +39,7 @@ before_install:
 - export PATH=$HOME/.cabal/bin:$PATH
 
 script:
-- cabal build
+- cabal build -w ghc-8.6.5
 - |
   if [ `uname` = "Darwin" ]
   then
