@@ -71,7 +71,8 @@ foreign-library hsphash
     hs-source-dirs:   foreign-src
     other-modules:    Export
     default-language: Haskell2010
-    install-includes: include/hs_phash.h
+    include-dirs:     include
+    install-includes: hs_phash.h
     ghc-options:      -Wall
     build-depends:
         base -any,
