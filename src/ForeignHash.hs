@@ -1,9 +1,10 @@
 -- N.B. this is a good deal faster than the Haskell code
 module ForeignHash ( foreignFileHash ) where
 
+import           Data.Coerce           (coerce)
 import           Data.Word             (Word64)
 import           Foreign.C.String      (CString, withCString)
-import           Foreign.C.Types       (CInt (..), CULLong)
+import           Foreign.C.Types       (CInt (..), CULLong (..))
 import           Foreign.Marshal.Alloc (alloca)
 import           Foreign.Ptr           (Ptr)
 import           Foreign.Storable      (peek)
@@ -16,7 +17,7 @@ foreignFileHash fp = withCString fp $ \cstr ->
     alloca $ \hashPtr -> do
         res <- ph_dct_imagehash cstr hashPtr
         check res
-        fromIntegral <$> peek hashPtr
+        coerce <$> peek hashPtr
 
     where check (-1) = error ("Hash of file " ++ fp ++ " failed.")
           check 0    = pure ()
