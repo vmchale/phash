@@ -1,20 +1,21 @@
-cabal-version:   2.0
-name:            perceptual-hash
-version:         0.1.3.0
-license:         BSD3
-license-file:    LICENSE
-copyright:       Copyright: (c) 2019 Vanessa McHale
-maintainer:      vamchale@gmail.com
-author:          Vanessa McHale
-synopsis:        Find duplicate images
-description:     Find similar images using perceptual hashes
-category:        Application, CommandLine, Images
-build-type:      Simple
+cabal-version:      2.0
+name:               perceptual-hash
+version:            0.1.3.0
+license:            BSD3
+license-file:       LICENSE
+copyright:          Copyright: (c) 2019 Vanessa McHale
+maintainer:         vamchale@gmail.com
+author:             Vanessa McHale
+synopsis:           Find duplicate images
+description:        Find similar images using perceptual hashes
+category:           Application, CommandLine, Images
+build-type:         Simple
 data-files:
     demo-data/cat.png
     demo-data/frog.jpeg
     demo-data/frog.png
 
+extra-source-files: include/hs_phash.h
 extra-doc-files:
     README.md
     CHANGELOG.md
@@ -70,6 +71,7 @@ foreign-library hsphash
     hs-source-dirs:   foreign-src
     other-modules:    Export
     default-language: Haskell2010
+    install-includes: include/hs_phash.h
     ghc-options:      -Wall
     build-depends:
         base -any,
