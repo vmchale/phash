@@ -94,4 +94,5 @@ std dev              79.36 μs   (52.02 μs .. 119.5 μs)
 
 ### Foreign Library
 
-This package contains a foreign library and header files.
+This package contains a foreign library and a [header
+file](https://hackage.haskell.org/package/perceptual-hash/src/include/hs_phash.h)
