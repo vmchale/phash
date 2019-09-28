@@ -1,5 +1,9 @@
 # phash
 
+## 0.1.3.2
+
+  * Fix `include/hs_phash.h` installation
+
 ## 0.1.3.1
 
   * Add `include/hs_phash.h` header
