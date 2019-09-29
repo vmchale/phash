@@ -6,11 +6,10 @@ import           Control.Concurrent.STM      (atomically)
 import           Control.Concurrent.STM.TVar (TVar, modifyTVar', newTVarIO, readTVarIO)
 import           Data.Functor                (($>))
 import           Data.List.NonEmpty          (NonEmpty (..), (<|))
-import qualified Data.Map                    as M
-import           Data.Word                   (Word64)
 import           PerceptualHash              (fileHash)
 import           System.Directory.Parallel   (parTraverse)
 import           System.FilePath             (takeExtension)
+import qualified Word.Map                    as M
 
 imgExtension :: String -> Bool
 imgExtension ".jpg"  = True
@@ -26,7 +25,7 @@ imgExtension ".tif"  = True
 imgExtension ".tiff" = True
 imgExtension _       = False
 
-insertHash :: FilePath -> IO (M.Map Word64 (NonEmpty FilePath) -> M.Map Word64 (NonEmpty FilePath))
+insertHash :: FilePath -> IO (M.Map (NonEmpty FilePath) -> M.Map (NonEmpty FilePath))
 insertHash fp = do
     hash <- fileHash fp
     case hash of
@@ -37,12 +36,12 @@ insertHash fp = do
                     Nothing     -> M.insert x (fp :| []) hashes
         Left err -> putStrLn ("WARNING: skipping " ++ fp ++ "\n" ++ err) $> id
 
-stepMap :: TVar (M.Map Word64 (NonEmpty FilePath)) -> FilePath -> IO ()
+stepMap :: TVar (M.Map (NonEmpty FilePath)) -> FilePath -> IO ()
 stepMap var fp = do
     mod' <- insertHash fp
     atomically $ modifyTVar' var mod'
 
-pathMaps :: [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
+pathMaps :: [FilePath] -> IO (M.Map (NonEmpty FilePath))
 pathMaps fps = do
     total <- newTVarIO mempty
     parTraverse (stepMap total) fileFilter (\_ -> pure True) fps
