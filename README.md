@@ -33,7 +33,7 @@ phash ~/Pictures ~/Downloads
 
 ### Script
 
-On many platforms, you can install the command-line tool with a script, viz.
+On many platforms, you can install the command-line tool with a script:
 
 ```
 curl -sSl https://raw.githubusercontent.com/vmchale/phash/master/bash/install.sh | sh -s
