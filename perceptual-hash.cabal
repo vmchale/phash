@@ -46,8 +46,7 @@ library
         hip -any,
         vector-algorithms -any,
         vector -any,
-        primitive -any,
-        repa -any
+        primitive -any
 
     if flag(llvm)
         ghc-options: -fllvm
