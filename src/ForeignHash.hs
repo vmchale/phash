@@ -12,6 +12,8 @@ import           Foreign.Storable      (peek)
 foreign import ccall ph_dct_imagehash :: CString -> Ptr CULLong -> IO CInt
 
 -- | Doesn't work with @.gif@ files
+--
+-- This will throw an exception on failure.
 foreignFileHash :: FilePath -> IO Word64
 foreignFileHash fp = withCString fp $ \cstr ->
     alloca $ \hashPtr -> do
