@@ -9,7 +9,7 @@ before_test:
 test_script:
 - refreshenv
 - cabal update
-- cabal build lib:perceptual-hash
+- cabal build exe:phash
 - ps: $directory = Get-ChildItem . -name -recurse phash.exe
 - ps: Copy-Item $directory phash-x86_64-pc-windows.exe
 - ps: Push-AppveyorArtifact phash-x86_64-pc-windows.exe
