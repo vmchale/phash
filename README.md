@@ -12,13 +12,13 @@ to detect (potential) duplicate images.
 It also contains a command-line tool.
 
 - [Use](#use)
-  - [Example](#example)
 - [Installation](#installation)
   - [Script](#script)
   - [Pre-Built Release](#pre-built-release)
   - [Source](#source)
 - [Library](#library)
   - [Performance](#performance)
+  - [Foreign Library](#foreign-library)
 
 ## Use
 
