@@ -1,4 +1,4 @@
--- N.B. this is a good deal faster than the Haskell code
+-- N.B. this is a little faster than the Haskell code
 module ForeignHash ( foreignFileHash ) where
 
 import           Data.Coerce           (coerce)
