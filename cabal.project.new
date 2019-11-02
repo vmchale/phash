@@ -1,0 +1,15 @@
+packages: ./
+        , par-traverse
+
+max-backjumps: 160000000
+
+allow-newer:
+  repa:base
+
+constraints:
+  hip +disable-chart
+
+source-repository-package
+  type: git
+  tag: 1145188dd5dbf2675d5d58354d545fb8b0dd6d8f
+  location: https://github.com/lehins/hip.git
