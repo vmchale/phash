@@ -1,3 +1,4 @@
+*.swp
 .stack-work
 .hspec-failures
 .ghc.environment.*
