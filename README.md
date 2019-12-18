@@ -50,7 +50,7 @@ Download [cabal-install](https://www.haskell.org/cabal/download.html) and
 [GHC](https://www.haskell.org/ghc/download.html). Then:
 
 ```
-cabal install perceptual-hash -w ghc-8.6.5
+cabal install perceptual-hash --constraint='hip +disable-chart'
 ```
 
 ## Library
