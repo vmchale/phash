@@ -3,8 +3,5 @@ packages: ./
 
 max-backjumps: 160000000
 
-allow-newer:
-  repa:base
-
 constraints:
   hip +disable-chart
