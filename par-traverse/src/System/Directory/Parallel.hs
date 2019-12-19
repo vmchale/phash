@@ -6,6 +6,8 @@ import           Control.Monad                       (filterM)
 import           System.Directory                    (doesDirectoryExist, listDirectory)
 import           System.FilePath                     ((</>))
 
+-- TODO: mapConcurrently?
+
 partitionM :: Monad m => (a -> m Bool) -> [a] -> m ([a], [a])
 partitionM _ [] = pure ([], [])
 partitionM f (x:xs) = do
@@ -28,6 +30,7 @@ parTraverse act fileP dirP dirs = do
     where loopPool :: Pool -> FilePath -> IO ()
           loopPool pool fp = do
                 all' <- fmap (fp </>) <$> listDirectory fp
+                -- unsafeInterleaveIO? lol
                 (dirs', files) <- partitionM doesDirectoryExist all'
                 dirs'' <- filterM dirP dirs'
                 files' <- filterM fileP files
