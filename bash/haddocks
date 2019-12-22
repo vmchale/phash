@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-set -e pipefail
-DOCS_PATH=$(PKG_CONFIG_PATH=$(cpkg dump pkg-config pHash) cabal haddock --haddock-for-hackage -w ghc-8.6.5 --constraint='perceptual-hash +with-phash' | tail -n1)
-cabal upload --publish -d "$DOCS_PATH"
