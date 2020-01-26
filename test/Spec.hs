@@ -12,6 +12,11 @@ main = hspec $
             expected <- fileHash "demo-data/frog.png"
             actual `shouldBe` expected
 
+        parallel $ it "should match when same" $ do
+            actual <- fileHash "demo-data/meme-watermark.jpg"
+            expected <- fileHash "demo-data/meme.png"
+            actual `shouldBe` expected
+
         parallel $ it "should not match when different" $ do
             actual <- fileHash "demo-data/cat.png"
             expected <- fileHash "demo-data/frog.png"
