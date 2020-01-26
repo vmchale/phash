@@ -1,6 +1,6 @@
 cabal-version:      2.0
 name:               perceptual-hash
-version:            0.1.3.2
+version:            0.1.3.3
 license:            BSD3
 license-file:       LICENSE
 copyright:          Copyright: (c) 2019 Vanessa McHale
@@ -14,6 +14,8 @@ data-files:
     demo-data/cat.png
     demo-data/frog.jpeg
     demo-data/frog.png
+    demo-data/meme.png
+    demo-data/meme-watermark.jpg
 
 extra-source-files: include/hs_phash.h
 extra-doc-files:
