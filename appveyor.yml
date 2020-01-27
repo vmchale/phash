@@ -3,7 +3,7 @@
 build: off
 
 before_test:
-- choco install ghc --version 8.6.5
+- choco install ghc
 - choco install cabal
 
 test_script:
