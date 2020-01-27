@@ -105,3 +105,8 @@ std dev              84.08 μs   (70.14 μs .. 97.91 μs)
 
 This package contains a foreign library and a [header
 file](https://hackage.haskell.org/package/perceptual-hash/src/include/hs_phash.h)
+
+#### ATS Bindings
+
+Because of the foreign library, `hs_phash` can be used in ATS as well. ATS users
+of the library may be interested in [hs-bind](https://github.com/vmchale/hs-bind).
