@@ -5,8 +5,14 @@
   - [ ] every library is giving a different result lol
 # Performance
 - [ ] Convolution is slow; maybe try a smaller matrix?
+- [ ] repa-algorithms convolve?
 # Code Maintenance
 - [ ] Test suite
   - [ ] Test median (no coverage)
   - [ ] Better heuristics
   - [ ] Figure out pHash library errors?
+# Features
+- [ ] When pointed at a single file, simply print its hash
+- [ ] Implement other hashes as a library:
+  - [ ] https://www.phash.org/docs/pubs/thesis_zauner.pdf
+  (maybe futhark?)
