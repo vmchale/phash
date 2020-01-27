@@ -1,3 +1,4 @@
+*_sats.c
 *.swp
 .stack-work
 .hspec-failures
