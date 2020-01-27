@@ -19,7 +19,7 @@ matrix:
         sources:
         - hvr-ghc
         packages:
-        - ghc-8.6.5
+        - ghc-8.8.2
         - cabal-install-3.0
 
   - env: TARGET=x86_64-apple-darwin
@@ -29,7 +29,7 @@ before_install:
 - |
   if [ `uname` = "Darwin" ]
   then
-    brew install ghc@8.6
+    brew install ghc
     brew install cabal-install
     cabal update
   else
@@ -39,7 +39,7 @@ before_install:
 - export PATH=$HOME/.cabal/bin:$PATH
 
 script:
-- cabal build -w ghc-8.6.5
+- cabal build
 - |
   if [ `uname` = "Darwin" ]
   then

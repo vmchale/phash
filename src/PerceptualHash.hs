@@ -18,7 +18,7 @@ import           Median                   (median)
 
 dct32 :: (Floating e, Array arr Y e) => Image arr Y e
 dct32 = makeImage (32,32) gen
-    where gen (i,j) = PixelY $ sqrt(2/n) * cos((fromIntegral ((2*i+1) * j) * pi)/(2*n))
+    where gen (i,j) = PixelY $ sqrt(2/n) * cos((fromIntegral ((2*i) * (j-1)) * pi)/(2*n))
           n = 32
 
 idMat :: (Fractional e, Array arr X e) => Image arr X e
