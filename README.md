@@ -19,6 +19,7 @@ It also contains a command-line tool.
 - [Library](#library)
   - [Performance](#performance)
   - [Foreign Library](#foreign-library)
+    - [ATS Bindings](#ats-bindings)
 
 ## Use
 
