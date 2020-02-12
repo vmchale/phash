@@ -3,7 +3,7 @@ name:               perceptual-hash
 version:            0.1.3.4
 license:            BSD3
 license-file:       LICENSE
-copyright:          Copyright: (c) 2019 Vanessa McHale
+copyright:          Copyright: (c) 2019-2020 Vanessa McHale
 maintainer:         vamchale@gmail.com
 author:             Vanessa McHale
 synopsis:           Find duplicate images
