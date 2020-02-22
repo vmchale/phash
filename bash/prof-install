@@ -2,5 +2,5 @@
 
 set -e
 
-cabal build exe:phash -w ghc-8.6.5 --constraint='perceptual-hash +llvm' --enable-profiling
+cabal build exe:phash -w ghc-8.8.2 --constraint='perceptual-hash +llvm' --enable-profiling
 cp "$(fd -t x '^phash$' -I)" ~/.local/bin/phash-prof
