@@ -1,5 +1,6 @@
 # Upstream
 - [ ] Report bug with mac LLVM backend (w/ profiling build)
+- [ ] Report bug with Eta
 - [x] Figure out `unpacked-containers`?
 # Bugs
 - [ ] `demo/meme.png` vs. `demo/meme-watermark.jpg` bug? compare J library!
