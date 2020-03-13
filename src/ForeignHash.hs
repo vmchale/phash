@@ -1,4 +1,4 @@
--- N.B. this is a good deal faster than the Haskell code
+-- N.B. this is a little faster than the Haskell code
 module ForeignHash ( foreignFileHash ) where
 
 import           Data.Coerce           (coerce)
@@ -12,6 +12,8 @@ import           Foreign.Storable      (peek)
 foreign import ccall ph_dct_imagehash :: CString -> Ptr CULLong -> IO CInt
 
 -- | Doesn't work with @.gif@ files
+--
+-- This will throw an exception on failure.
 foreignFileHash :: FilePath -> IO Word64
 foreignFileHash fp = withCString fp $ \cstr ->
     alloca $ \hashPtr -> do

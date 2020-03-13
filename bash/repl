@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+LD_LIBRARY_PATH="$(cpkg dump ld-path pHash ffmpeg fdk-aac)" PKG_CONFIG_PATH="$(cpkg dump pkg-config pHash)" cabal repl --constraint='perceptual-hash +with-phash' "$@"
