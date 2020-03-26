@@ -2,3 +2,8 @@ packages: ./
         , par-traverse
 
 max-backjumps: 160000000
+
+allow-newer:
+  polyparse:base
+
+constraints: hip +disable-chart
