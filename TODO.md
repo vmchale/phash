@@ -2,6 +2,7 @@
 - [ ] Report bug with mac LLVM backend (w/ profiling build)
 - [ ] Report bug with Eta
 - [x] Figure out `unpacked-containers`?
+- [x] Report less performant code (GHC 8.10.1)
 # Bugs
 - [ ] `demo/meme.png` vs. `demo/meme-watermark.jpg` bug? compare J library!
   - [ ] Also futhark library lol
