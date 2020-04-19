@@ -8,7 +8,7 @@ constraints:
 
 source-repository-package
   type: git
-  tag: 7c08fdd6b39e4cea1bc4f0e5fecae584fa9c52d5
+  tag: df71d2155ab42cb468894ad400bf8bf6cafef2c8
   location: https://github.com/vmchale/hip.git
 
 source-repository-package
