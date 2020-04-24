@@ -9,7 +9,7 @@ import           Data.List.NonEmpty          (NonEmpty (..), (<|))
 import qualified Data.Map                    as M
 import           Data.Word                   (Word64)
 import           PerceptualHash              (fileHash)
-import           System.Directory.Parallel   (parTraverse)
+import           System.Directory.Parallel   (parTraverseAll)
 import           System.FilePath             (takeExtension)
 
 imgExtension :: String -> Bool
@@ -45,7 +45,7 @@ stepMap var fp = do
 pathMaps :: [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
 pathMaps fps = do
     total <- newTVarIO mempty
-    parTraverse (stepMap total) fileFilter (\_ -> pure True) fps
+    parTraverseAll (stepMap total) fileFilter (\_ -> pure True) fps
     readTVarIO total
 
     where fileFilter = pure . imgExtension . takeExtension
