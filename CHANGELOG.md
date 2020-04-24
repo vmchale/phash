@@ -1,5 +1,9 @@
 # phash
 
+## 0.1.3.5
+
+  * Allows files to be passed via the command-line
+
 ## 0.1.3.3
 
   * Fix bug
