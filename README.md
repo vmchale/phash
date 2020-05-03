@@ -1,7 +1,5 @@
 # phash
 
-[![Build Status](https://travis-ci.org/vmchale/phash.svg?branch=master)](https://travis-ci.org/vmchale/phash)
-[![Windows build status](https://ci.appveyor.com/api/projects/status/github/vmchale/phash?svg=true)](https://ci.appveyor.com/project/vmchale/phash)
 [![Hackage CI](https://matrix.hackage.haskell.org/api/v2/packages/perceptual-hash/badge)](https://matrix.hackage.haskell.org/package/perceptual-hash)
 [![Hackage](https://img.shields.io/hackage/v/perceptual-hash.svg)](http://hackage.haskell.org/package/perceptual-hash)
 [![Dependencies of latest version on Hackage](https://img.shields.io/hackage-deps/v/perceptual-hash.svg)](https://hackage.haskell.org/package/perceptual-hash)
@@ -13,7 +11,6 @@ It also contains a command-line tool.
 
 - [Use](#use)
 - [Installation](#installation)
-  - [Script](#script)
   - [Pre-Built Release](#pre-built-release)
   - [Source](#source)
 - [Library](#library)
@@ -32,18 +29,9 @@ phash ~/Pictures ~/Downloads
 
 ## Installation
 
-### Script
-
-On many platforms, you can install the command-line tool with a script:
-
-```
-curl -sSl https://raw.githubusercontent.com/vmchale/phash/master/bash/install.sh | sh -s
-```
-
 ### Pre-Built Release
 
-Download the latest release from
-[here](https://github.com/vmchale/phash/releases).
+For many platforms, you can find binaries [here](https://www.permanent.org/p/archive/0236-0000/0236-0019/410841).
 
 ### Source
 

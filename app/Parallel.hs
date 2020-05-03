@@ -7,7 +7,7 @@ import           Control.Concurrent.STM.TVar (TVar, modifyTVar', newTVarIO, read
 import           Data.Functor                (($>))
 import           Data.List.NonEmpty          (NonEmpty (..), (<|))
 import           PerceptualHash              (fileHash)
-import           System.Directory.Parallel   (parTraverse)
+import           System.Directory.Parallel   (parTraverseAll)
 import           System.FilePath             (takeExtension)
 import qualified Word.Map                    as M
 
@@ -44,7 +44,7 @@ stepMap var fp = do
 pathMaps :: [FilePath] -> IO (M.Map (NonEmpty FilePath))
 pathMaps fps = do
     total <- newTVarIO mempty
-    parTraverse (stepMap total) fileFilter (\_ -> pure True) fps
+    parTraverseAll (stepMap total) fileFilter (\_ -> pure True) fps
     readTVarIO total
 
     where fileFilter = pure . imgExtension . takeExtension
