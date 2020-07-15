@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e pipefail
+
+for arch in aarch64-linux-gnu arm-linux-gnueabihf powerpc64le-linux-gnu sparc64-linux-gnu
+do
+    cabal build --with-ghc="$arch"-ghc --with-ghc-pkg="$arch"-ghc-pkg lib:perceptual-hash --project-file cabal.project.cross
+done

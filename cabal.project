@@ -4,3 +4,4 @@ packages: ./
 max-backjumps: 160000000
 
 constraints: hip +disable-chart
+           , perceptual-hash +llvm

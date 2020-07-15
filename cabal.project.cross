@@ -16,3 +16,6 @@ source-repository-package
   tag: c96ffd61c812a20ef49058e3fe9b8d1a2ae977b2
   location: https://github.com/vmchale/repa.git
   subdir: repa
+
+allow-newer:
+  repa:base
