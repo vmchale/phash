@@ -32,9 +32,9 @@ insertHash fp = do
     case hash of
         Right x ->
             pure $ \hashes ->
-                case M.lookup x hashes of
-                    Just others -> M.insert x (fp <| others) hashes
-                    Nothing     -> M.insert x (fp :| []) hashes
+                let go (Just others) = Just (fp <| others)
+                    go Nothing       = Just (fp :| [])
+                    in M.alter go x hashes
         Left err -> putStrLn ("WARNING: skipping " ++ fp ++ "\n" ++ err) $> id
 
 stepMap :: TVar (M.Map Word64 (NonEmpty FilePath)) -> FilePath -> IO ()
