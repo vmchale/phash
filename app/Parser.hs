@@ -8,20 +8,28 @@ import qualified Paths_perceptual_hash as P
 phashVersion :: V.Version
 phashVersion = P.version
 
+distances :: Parser Bool
+distances =
+    switch
+    (long "distances"
+    <> short 'd'
+    <> help "Display distances between images")
+
 debug :: Parser Bool
 debug =
     switch
     (long "debug"
     <> help "Show debug output")
 
-targets :: Parser ([FilePath], Bool)
-targets = (,)
+targets :: Parser ([FilePath], Bool, Bool)
+targets = (,,)
     <$> some (argument str
              (metavar "DIRECTORY"
              <> help "Directory to include"))
     <*> debug
+    <*> distances
 
-wrapper :: ParserInfo ([FilePath], Bool)
+wrapper :: ParserInfo ([FilePath], Bool, Bool)
 wrapper = info (helper <* versionInfo <*> targets)
     (fullDesc
     <> progDesc "A command-line tool to detect duplicate images."
