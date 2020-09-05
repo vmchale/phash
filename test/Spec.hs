@@ -1,5 +1,3 @@
--- vim: syntax=hspec
-
 import           PerceptualHash (fileHash)
 import           Test.Hspec
 
