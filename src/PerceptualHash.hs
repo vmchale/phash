@@ -3,10 +3,12 @@
 
 module PerceptualHash ( imgHash
                       , fileHash
+                      , hammingDistance
                       ) where
 
 import           Control.Monad.ST         (runST)
 import           Data.Bits                (shiftL, (.|.))
+import           Data.Bits                (Bits, popCount, xor)
 import qualified Data.Vector.Generic      as V
 import           Data.Word                (Word64)
 import           Graphics.Image           (Array, Bilinear (..), Border (Edge, Reflect), Image,
@@ -15,6 +17,14 @@ import           Graphics.Image           (Array, Bilinear (..), Border (Edge, R
 import           Graphics.Image.Interface (toVector)
 import qualified Graphics.Image.Interface as Hip
 import           Median                   (median)
+
+-- | See
+-- [wiki](https://en.wikipedia.org/wiki/Hamming_distance#Algorithm_example).
+--
+-- @since 0.1.4.0
+{-# SPECIALIZE hammingDistance :: Word64 -> Word64 -> Int #-}
+hammingDistance :: Bits a => a -> a -> Int
+hammingDistance x y = popCount (x `xor` y)
 
 dct32 :: (Floating e, Array arr Y e) => Image arr Y e
 dct32 = makeImage (32,32) gen

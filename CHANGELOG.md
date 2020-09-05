@@ -1,5 +1,9 @@
 # phash
 
+## 0.1.4.0
+
+  * Add `hammingDistance` function in `PerceptualHash` module
+
 ## 0.1.3.5
 
   * Allows files to be passed via the command-line
