@@ -1,9 +1,0 @@
----
-resolver: lts-10.10
-ghc-options: {"$locals": -ddump-to-file -ddump-hi}
-flags:
-  perceptual-hash:
-    with-phash: false
-packages:
-- par-traverse
-- .
