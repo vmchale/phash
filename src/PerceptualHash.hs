@@ -7,8 +7,7 @@ module PerceptualHash ( imgHash
                       ) where
 
 import           Control.Monad.ST         (runST)
-import           Data.Bits                (shiftL, (.|.))
-import           Data.Bits                (Bits, popCount, xor)
+import           Data.Bits                (Bits, popCount, shiftL, xor, (.|.))
 import qualified Data.Vector.Generic      as V
 import           Data.Word                (Word64)
 import           Graphics.Image           (Array, Bilinear (..), Border (Edge, Reflect), Image,
