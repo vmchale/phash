@@ -40,6 +40,7 @@ library
     exposed-modules:  PerceptualHash
     hs-source-dirs:   src
     other-modules:    Median
+                      WebP
     default-language: Haskell2010
     other-extensions: FlexibleContexts TypeFamilies
     ghc-options:      -Wall -O2
@@ -48,7 +49,9 @@ library
         hip -any,
         vector-algorithms -any,
         vector -any,
-        primitive -any
+        bytestring,
+        primitive -any,
+        webp
 
     if flag(llvm)
         ghc-options: -fllvm
