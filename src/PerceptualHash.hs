@@ -3,26 +3,26 @@
 
 module PerceptualHash ( imgHash
                       , fileHash
-                      , fileHashWebp
                       , hammingDistance
                       ) where
 
-import qualified Codec.Picture            as JuicyPixels
-import           Codec.Picture.WebP       (decodeRgb8)
-import           Control.Monad.ST         (runST)
-import           Data.Bits                (Bits, popCount, shiftL, xor, (.|.))
-import qualified Data.ByteString          as BS
-import           Data.List                (isSuffixOf)
-import qualified Data.Vector.Generic      as V
-import qualified Data.Vector.Storable     as VS
-import           Data.Word                (Word64, Word8)
-import           Graphics.Image           (Array, Bilinear (..), Border (Edge, Reflect), Image,
-                                           Pixel (PixelX, PixelY), RGB, RSU (..), VS, X, Y, convert,
-                                           convolve, crop, makeImage, readImage, resize, transpose,
-                                           (|*|))
-import           Graphics.Image.Interface (fromVector, toVector)
-import qualified Graphics.Image.Interface as Hip
-import           Median                   (median)
+import qualified Codec.Picture                 as JuicyPixels
+import           Codec.Picture.WebP            (decodeRgb8)
+import           Control.Monad.ST              (runST)
+import           Data.Bits                     (Bits, popCount, shiftL, xor, (.|.))
+import qualified Data.ByteString               as BS
+import           Data.List                     (isSuffixOf)
+import qualified Data.Vector.Generic           as V
+import qualified Data.Vector.Storable          as VS
+import           Data.Word                     (Word64, Word8)
+import           Graphics.Image                (Array, Bilinear (..), Border (Edge, Reflect), Image,
+                                                Pixel (PixelX, PixelY), RGB, RSU (..), VS, X, Y,
+                                                convert, convolve, crop, makeImage, readImage,
+                                                resize, transpose, (|*|))
+import           Graphics.Image.Interface      (fromVector, toVector)
+import qualified Graphics.Image.Interface      as Hip
+import           Graphics.Image.Interface.Repa (fromRepaArrayS, toRepaArray)
+import           Median                        (median)
 
 -- | See
 -- [wiki](https://en.wikipedia.org/wiki/Hamming_distance#Algorithm_example).
@@ -88,7 +88,9 @@ readWebp = fmap convert . fileWebp
 
 -- | @since 0.1.5.0
 fileHashWebp :: FilePath -> IO Word64
-fileHashWebp = fmap imgHash . readWebp
+fileHashWebp = fmap (imgHash . convRepa) . readWebp
+    -- faster
+    where convRepa = fromRepaArrayS . toRepaArray
 
 fileHash :: FilePath -> IO (Either String Word64)
 fileHash fp | ".webp" `isSuffixOf` fp = pure <$> fileHashWebp fp
