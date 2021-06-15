@@ -3,17 +3,24 @@
 
 module PerceptualHash ( imgHash
                       , fileHash
+                      , fileHashWebp
                       , hammingDistance
                       ) where
 
+import qualified Codec.Picture            as JuicyPixels
+import           Codec.Picture.WebP       (decodeRgb8)
 import           Control.Monad.ST         (runST)
 import           Data.Bits                (Bits, popCount, shiftL, xor, (.|.))
+import qualified Data.ByteString          as BS
+import           Data.List                (isSuffixOf)
 import qualified Data.Vector.Generic      as V
-import           Data.Word                (Word64)
+import qualified Data.Vector.Storable     as VS
+import           Data.Word                (Word64, Word8)
 import           Graphics.Image           (Array, Bilinear (..), Border (Edge, Reflect), Image,
-                                           Pixel (PixelX, PixelY), RSU (..), X, Y, convolve, crop,
-                                           makeImage, readImage, resize, transpose, (|*|))
-import           Graphics.Image.Interface (toVector)
+                                           Pixel (PixelX, PixelY), RGB, RSU (..), VS, X, Y, convert,
+                                           convolve, crop, makeImage, readImage, resize, transpose,
+                                           (|*|))
+import           Graphics.Image.Interface (fromVector, toVector)
 import qualified Graphics.Image.Interface as Hip
 import           Median                   (median)
 
@@ -70,5 +77,22 @@ aboveMed v =
     let med = medianImmut v
     in V.map (<med) v
 
+fileWebp :: FilePath -> IO (Image VS RGB Word8)
+fileWebp fp = do
+    contents <- BS.readFile fp
+    let (JuicyPixels.Image m n pixels) = decodeRgb8 contents
+    pure $ fromVector (n, m) $ VS.unsafeCast pixels
+
+readWebp :: FilePath -> IO (Image VS Y Double)
+readWebp = fmap convert . fileWebp
+
+-- | @since 0.1.5.0
+fileHashWebp :: FilePath -> IO Word64
+fileHashWebp = fmap imgHash . readWebp
+
 fileHash :: FilePath -> IO (Either String Word64)
-fileHash = fmap (fmap (imgHash :: Image RSU Y Double -> Word64)) . readImage
+fileHash fp | ".webp" `isSuffixOf` fp = pure <$> fileHashWebp fp
+            | otherwise = fileHashHip fp
+
+fileHashHip :: FilePath -> IO (Either String Word64)
+fileHashHip = fmap (fmap (imgHash :: Image RSU Y Double -> Word64)) . readImage

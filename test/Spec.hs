@@ -19,3 +19,8 @@ main = hspec $
             actual <- fileHash "demo-data/cat.png"
             expected <- fileHash "demo-data/frog.png"
             actual `shouldSatisfy` (/= expected)
+
+        parallel $ it "should match when same" $ do
+            actual <- fileHash "demo-data/liz-taylor.webp"
+            expected <- fileHash "demo-data/liz-taylor.png"
+            actual `shouldBe` expected

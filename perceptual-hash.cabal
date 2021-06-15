@@ -45,16 +45,19 @@ library
     ghc-options:      -Wall -O2
     build-depends:
         base >=4.8 && <5,
-        hip -any,
-        vector-algorithms -any,
-        vector -any,
-        primitive -any
+        hip,
+        vector-algorithms,
+        vector,
+        primitive,
+        webp,
+        bytestring,
+        JuicyPixels
 
     if flag(llvm)
         ghc-options: -fllvm
 
     if flag(with-phash)
-        pkgconfig-depends: pHash -any
+        pkgconfig-depends: pHash
 
     if flag(with-phash)
         exposed-modules: ForeignHash
@@ -79,8 +82,8 @@ foreign-library hsphash
     install-includes: hs_phash.h
     ghc-options:      -Wall
     build-depends:
-        base -any,
-        perceptual-hash -any
+        base,
+        perceptual-hash
 
     lib-version-info: 1:0:0
 
@@ -112,9 +115,9 @@ executable phash
     ghc-options:      -Wall -threaded -rtsopts "-with-rtsopts=-N -qg"
     build-depends:
         base >=4.9 && <5,
-        perceptual-hash -any,
-        containers -any,
-        filepath -any,
+        perceptual-hash,
+        containers,
+        filepath,
         optparse-applicative >=0.13.0.0,
         par-traverse >=0.2.1.0,
         stm >=2.3
@@ -140,9 +143,9 @@ test-suite perceptual-hash-test
     default-language: Haskell2010
     ghc-options:      -Wall -threaded -rtsopts "-with-rtsopts=-N -K1K"
     build-depends:
-        base -any,
-        perceptual-hash -any,
-        hspec -any
+        base,
+        perceptual-hash,
+        hspec
 
     if impl(ghc >=8.0)
         ghc-options:
@@ -158,7 +161,7 @@ test-suite perceptual-hash-test
 benchmark phash-bench
     type:               exitcode-stdio-1.0
     main-is:            Bench.hs
-    build-tool-depends: cpphs:cpphs -any
+    build-tool-depends: cpphs:cpphs
     hs-source-dirs:     bench
     default-language:   Haskell2010
     ghc-options:
@@ -167,11 +170,11 @@ benchmark phash-bench
         -Wredundant-constraints
 
     build-depends:
-        base -any,
-        perceptual-hash -any,
-        criterion -any,
-        filepath -any,
-        deepseq -any
+        base,
+        perceptual-hash,
+        criterion,
+        filepath,
+        deepseq
 
     if flag(llvm)
         ghc-options: -fllvm
