@@ -81,7 +81,7 @@ fileWebp :: FilePath -> IO (Image VS RGB Word8)
 fileWebp fp = do
     contents <- BS.readFile fp
     let (JuicyPixels.Image m n pixels) = decodeRgb8 contents
-    pure $ fromVector (n, m) $ VS.unsafeCast pixels
+    pure $ fromVector (m, n) $ VS.unsafeCast pixels
 
 readWebp :: FilePath -> IO (Image VS Y Double)
 readWebp = fmap convert . fileWebp
