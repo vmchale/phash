@@ -1,5 +1,7 @@
 # phash
 
+  * Better performance on `.webp` images
+
 ## 0.1.4.2
 
   * Detect `.webp` on the command-line
