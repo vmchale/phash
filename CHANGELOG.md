@@ -1,5 +1,9 @@
 # phash
 
+## 0.1.4.2
+
+  * Detect `.webp` on the command-line
+
 ## 0.1.4.1
 
   * Add support for [webp](https://developers.google.com/speed/webp) images.
