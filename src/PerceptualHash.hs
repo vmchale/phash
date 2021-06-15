@@ -77,16 +77,17 @@ aboveMed v =
     let med = medianImmut v
     in V.map (<med) v
 
+{-# INLINE fileWebp #-}
 fileWebp :: FilePath -> IO (Image VS RGB Word8)
 fileWebp fp = do
     contents <- BS.readFile fp
     let (JuicyPixels.Image m n pixels) = decodeRgb8 contents
     pure $ fromVector (m, n) $ VS.unsafeCast pixels
 
+{-# INLINE readWebp #-}
 readWebp :: FilePath -> IO (Image VS Y Double)
 readWebp = fmap convert . fileWebp
 
--- | @since 0.1.5.0
 fileHashWebp :: FilePath -> IO Word64
 fileHashWebp = fmap (imgHash . convRepa) . readWebp
     -- faster
