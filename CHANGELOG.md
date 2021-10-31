@@ -1,5 +1,7 @@
 # phash
 
+  * Add `disable-webp` flag
+
 ## 0.1.4.2
 
   * Detect `.webp` on the command-line

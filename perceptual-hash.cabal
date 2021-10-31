@@ -33,6 +33,10 @@ flag with-phash
     default:     False
     manual:      True
 
+flag disable-webp
+    description: Don't depend on webp FFI bindings
+    default:     False
+
 flag llvm
     description: Use LLVM backend to GHC rather than NCG
     default:     False
@@ -44,6 +48,7 @@ library
     other-modules:    Median
     default-language: Haskell2010
     other-extensions: FlexibleContexts TypeFamilies
+    build-tool-depends: cpphs:cpphs
     ghc-options:      -Wall -O2
     build-depends:
         base >=4.8 && <5,
@@ -51,9 +56,14 @@ library
         vector-algorithms,
         vector,
         primitive,
-        webp,
         bytestring,
         JuicyPixels
+
+    if !flag(disable-webp)
+        build-depends: webp
+
+    if !flag(disable-webp)
+        cpp-options: -DWEBP
 
     if flag(llvm)
         ghc-options: -fllvm
