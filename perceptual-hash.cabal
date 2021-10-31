@@ -133,8 +133,7 @@ executable phash
         filepath,
         optparse-applicative >=0.13.0.0,
         par-traverse >=0.2.1.0,
-        stm >=2.3,
-        dir-traverse
+        stm >=2.3
 
     if flag(llvm)
         ghc-options: -fllvm

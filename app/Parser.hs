@@ -14,21 +14,14 @@ debug =
     (long "debug"
     <> help "Show debug output")
 
-threaded :: Parser Bool
-threaded =
-    switch
-    (long "no-threads"
-    <> help "Disable multicore")
-
-targets :: Parser ([FilePath], Bool, Bool)
-targets = (,,)
+targets :: Parser ([FilePath], Bool)
+targets = (,)
     <$> some (argument str
              (metavar "DIRECTORY"
              <> help "Directory to include"))
     <*> debug
-    <*> threaded
 
-wrapper :: ParserInfo ([FilePath], Bool, Bool)
+wrapper :: ParserInfo ([FilePath], Bool)
 wrapper = info (helper <* versionInfo <*> targets)
     (fullDesc
     <> progDesc "A command-line tool to detect duplicate images."
