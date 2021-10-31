@@ -31,9 +31,12 @@ displayAll fps = intercalate "\n" (displayPaths <$> toList fps)
 main :: IO ()
 main = run =<< execParser wrapper
 
-run :: ([FilePath], Bool) -> IO ()
-run (fps, debug) = do
+run :: ([FilePath], Bool, Bool) -> IO ()
+run (fps, debug, noThread) = do
     let displayF = if debug
         then displayDebug
         else displayAll . filterDup
-    putStrLn . displayF =<< pathMaps fps
+    let handlePaths = if noThread
+        then pathMapNoTVar
+        else pathMaps
+    putStrLn . displayF =<< handlePaths fps
