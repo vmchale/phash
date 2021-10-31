@@ -1,9 +1,9 @@
 cabal-version:      2.0
 name:               perceptual-hash
-version:            0.1.4.2
+version:            0.1.4.3
 license:            BSD3
 license-file:       LICENSE
-copyright:          Copyright: (c) 2019-2020 Vanessa McHale
+copyright:          Copyright: (c) 2019-2021 Vanessa McHale
 maintainer:         vamchale@gmail.com
 author:             Vanessa McHale
 synopsis:           Find duplicate images
