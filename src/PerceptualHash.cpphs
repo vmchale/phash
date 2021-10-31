@@ -7,7 +7,9 @@ module PerceptualHash ( imgHash
                       ) where
 
 import qualified Codec.Picture                 as JuicyPixels
+#ifdef WEBP
 import           Codec.Picture.WebP            (decodeRgb8)
+#endif
 import           Control.Monad.ST              (runST)
 import           Data.Bits                     (Bits, popCount, shiftL, xor, (.|.))
 import qualified Data.ByteString               as BS
@@ -77,6 +79,7 @@ aboveMed v =
     let med = medianImmut v
     in V.map (<med) v
 
+#ifdef WEBP
 {-# INLINE fileWebp #-}
 fileWebp :: FilePath -> IO (Image VS RGB Word8)
 fileWebp fp = do
@@ -96,6 +99,10 @@ fileHashWebp = fmap (imgHash . convRepa) . readWebp
 fileHash :: FilePath -> IO (Either String Word64)
 fileHash fp | ".webp" `isSuffixOf` fp = pure <$> fileHashWebp fp
             | otherwise = fileHashHip fp
+#else
+fileHash :: FilePath -> IO (Either String Word64)
+fileHash = fileHashHip
+#endif
 
 fileHashHip :: FilePath -> IO (Either String Word64)
 fileHashHip = fmap (fmap (imgHash :: Image RSU Y Double -> Word64)) . readImage

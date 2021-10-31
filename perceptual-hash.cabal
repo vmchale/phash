@@ -33,27 +33,37 @@ flag with-phash
     default:     False
     manual:      True
 
+flag disable-webp
+    description: Don't depend on webp FFI bindings
+    default:     False
+
 flag llvm
     description: Use LLVM backend to GHC rather than NCG
     default:     False
     manual:      True
 
 library
-    exposed-modules:  PerceptualHash
-    hs-source-dirs:   src
-    other-modules:    Median
-    default-language: Haskell2010
-    other-extensions: FlexibleContexts TypeFamilies
-    ghc-options:      -Wall -O2
+    exposed-modules:    PerceptualHash
+    build-tool-depends: cpphs:cpphs
+    hs-source-dirs:     src
+    other-modules:      Median
+    default-language:   Haskell2010
+    other-extensions:   FlexibleContexts TypeFamilies
+    ghc-options:        -Wall -O2
     build-depends:
         base >=4.8 && <5,
         hip,
         vector-algorithms,
         vector,
         primitive,
-        webp,
         bytestring,
         JuicyPixels
+
+    if !flag(disable-webp)
+        build-depends: webp
+
+    if !flag(disable-webp)
+        cpp-options: -DWEBP
 
     if flag(llvm)
         ghc-options: -fllvm
@@ -104,17 +114,18 @@ foreign-library hsphash
         ghc-options: -Wunused-packages
 
 executable phash
-    main-is:          Main.hs
-    hs-source-dirs:   app
+    main-is:            Main.hs
+    build-tool-depends: cpphs:cpphs
+    hs-source-dirs:     app
     other-modules:
         Paths_perceptual_hash
         Parser
         Parallel
 
-    autogen-modules:  Paths_perceptual_hash
-    default-language: Haskell2010
-    other-extensions: ScopedTypeVariables
-    ghc-options:      -Wall -threaded -rtsopts "-with-rtsopts=-N -qg"
+    autogen-modules:    Paths_perceptual_hash
+    default-language:   Haskell2010
+    other-extensions:   ScopedTypeVariables
+    ghc-options:        -Wall -threaded -rtsopts "-with-rtsopts=-N -qg"
     build-depends:
         base >=4.9 && <5,
         perceptual-hash,
@@ -139,11 +150,12 @@ executable phash
         ghc-options: -Wunused-packages
 
 test-suite perceptual-hash-test
-    type:             exitcode-stdio-1.0
-    main-is:          Spec.hs
-    hs-source-dirs:   test
-    default-language: Haskell2010
-    ghc-options:      -Wall -threaded -rtsopts "-with-rtsopts=-N -K1K"
+    type:               exitcode-stdio-1.0
+    main-is:            Spec.hs
+    build-tool-depends: cpphs:cpphs
+    hs-source-dirs:     test
+    default-language:   Haskell2010
+    ghc-options:        -Wall -threaded -rtsopts "-with-rtsopts=-N -K1K"
     build-depends:
         base,
         perceptual-hash,

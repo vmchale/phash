@@ -1,5 +1,6 @@
 # phash
 
+  * Add `disable-webp` flag
   * Better performance on `.webp` images
 
 ## 0.1.4.2
