@@ -6,10 +6,6 @@ max-backjumps: 160000000
 constraints: hip +disable-chart
 
 allow-newer:
-    polyparse-1.13:base
-  , polyparse-1.13:bytestring
-
-source-repository-package
-  type: git
-  location: https://github.com/awjchen/vector-th-unbox.git
-  tag: f37870ffe0f838203ca004ea2178e0e019aab8b2
+    aeson-2.0.1.0:template-haskell
+  , aeson-2.0.1.0:ghc-prim
+  , microstache-1.0.2:base
