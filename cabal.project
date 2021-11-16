@@ -4,8 +4,3 @@ packages: ./
 max-backjumps: 160000000
 
 constraints: hip +disable-chart
-
-allow-newer:
-    aeson-2.0.1.0:template-haskell
-  , aeson-2.0.1.0:ghc-prim
-  , microstache-1.0.2:base
