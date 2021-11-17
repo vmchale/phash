@@ -1,5 +1,9 @@
 # phash
 
+## 0.1.4.4
+
+  * Workaround for performance regression with GHC 9.2.1
+
 ## 0.1.4.3
 
   * Add `disable-webp` flag
