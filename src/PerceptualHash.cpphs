@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fspecialize-aggressively #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TypeFamilies     #-}
 
