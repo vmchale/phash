@@ -1,5 +1,9 @@
 # phash
 
+## 0.1.4.5
+
+  * Modest performance improvements
+
 ## 0.1.4.4
 
   * Workaround for performance regression with GHC 9.2.1

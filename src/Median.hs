@@ -5,6 +5,7 @@ import qualified Data.Vector.Algorithms.Merge as Merge
 import           Data.Vector.Generic.Mutable  (MVector)
 import qualified Data.Vector.Generic.Mutable  as MV
 
+{-# INLINABLE median #-}
 median :: (PrimMonad m, MVector v e, Ord e, Fractional e) => v (PrimState m) e -> m e
 median v = do
     Merge.sort v
