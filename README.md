@@ -49,45 +49,63 @@ You can find library documentation on
 
 ### Performance
 
-This library has similar performance to the pHash library for PNG
-images.
+This library has varying performance compared to the pHash library.
 
 ```
 benchmarking fileHash/cat.png
-time                 20.67 ms   (20.60 ms .. 20.78 ms)
+time                 20.84 ms   (20.63 ms .. 21.00 ms)
                      1.000 R²   (0.999 R² .. 1.000 R²)
-mean                 20.84 ms   (20.76 ms .. 21.01 ms)
-std dev              246.3 μs   (149.5 μs .. 396.7 μs)
+mean                 21.00 ms   (20.89 ms .. 21.30 ms)
+std dev              393.4 μs   (172.3 μs .. 722.2 μs)
 
 benchmarking fileHash/frog.jpeg
-time                 17.82 ms   (17.62 ms .. 18.05 ms)
-                     0.999 R²   (0.999 R² .. 1.000 R²)
-mean                 17.54 ms   (17.45 ms .. 17.65 ms)
-std dev              272.3 μs   (194.9 μs .. 369.3 μs)
+time                 18.66 ms   (18.50 ms .. 18.84 ms)
+                     1.000 R²   (0.999 R² .. 1.000 R²)
+mean                 18.44 ms   (18.34 ms .. 18.54 ms)
+std dev              230.2 μs   (167.5 μs .. 303.0 μs)
 
 benchmarking fileHash/frog.png
-time                 12.02 ms   (11.95 ms .. 12.11 ms)
+time                 11.78 ms   (11.70 ms .. 11.86 ms)
                      1.000 R²   (0.999 R² .. 1.000 R²)
-mean                 12.08 ms   (12.04 ms .. 12.13 ms)
-std dev              115.0 μs   (90.79 μs .. 144.7 μs)
+mean                 11.81 ms   (11.78 ms .. 11.86 ms)
+std dev              103.9 μs   (74.32 μs .. 149.0 μs)
+
+benchmarking fileHash/liz-taylor.webp
+time                 106.8 ms   (105.2 ms .. 108.1 ms)
+                     0.999 R²   (0.998 R² .. 1.000 R²)
+mean                 109.5 ms   (108.2 ms .. 111.7 ms)
+std dev              2.642 ms   (1.546 ms .. 4.081 ms)
+
+benchmarking fileHash/liz-taylor.png
+time                 71.42 ms   (70.83 ms .. 72.24 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 72.60 ms   (71.71 ms .. 74.85 ms)
+std dev              2.304 ms   (688.1 μs .. 3.802 ms)
 
 benchmarking foreignHash/cat.png
-time                 18.86 ms   (18.79 ms .. 18.97 ms)
+time                 23.12 ms   (23.00 ms .. 23.21 ms)
                      1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 18.92 ms   (18.87 ms .. 18.99 ms)
-std dev              149.7 μs   (129.0 μs .. 183.6 μs)
+mean                 23.15 ms   (23.09 ms .. 23.22 ms)
+std dev              151.9 μs   (121.8 μs .. 210.6 μs)
 
 benchmarking foreignHash/frog.jpeg
-time                 8.533 ms   (8.480 ms .. 8.574 ms)
-                     1.000 R²   (0.999 R² .. 1.000 R²)
-mean                 8.686 ms   (8.644 ms .. 8.745 ms)
-std dev              129.0 μs   (97.99 μs .. 164.8 μs)
+time                 8.430 ms   (8.266 ms .. 8.582 ms)
+                     0.999 R²   (0.998 R² .. 1.000 R²)
+mean                 8.313 ms   (8.286 ms .. 8.377 ms)
+std dev              111.3 μs   (70.34 μs .. 194.5 μs)
 
 benchmarking foreignHash/frog.png
-time                 9.697 ms   (9.649 ms .. 9.735 ms)
+time                 11.78 ms   (11.74 ms .. 11.83 ms)
                      1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 9.746 ms   (9.717 ms .. 9.775 ms)
-std dev              84.08 μs   (70.14 μs .. 97.91 μs)
+mean                 11.80 ms   (11.77 ms .. 11.82 ms)
+std dev              80.07 μs   (63.46 μs .. 98.00 μs)
+
+benchmarking foreignHash/liz-taylor.webp
+time                 331.4 ms   (329.3 ms .. 333.7 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 331.6 ms   (330.7 ms .. 332.6 ms)
+std dev              1.212 ms   (920.0 μs .. 1.524 ms)
+variance introduced by outliers: 16% (moderately inflated)
 ```
 
 ### Foreign Library
