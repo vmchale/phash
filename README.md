@@ -106,6 +106,12 @@ time                 331.4 ms   (329.3 ms .. 333.7 ms)
 mean                 331.6 ms   (330.7 ms .. 332.6 ms)
 std dev              1.212 ms   (920.0 μs .. 1.524 ms)
 variance introduced by outliers: 16% (moderately inflated)
+
+benchmarking foreignHash/liz-taylor.png
+time                 83.30 ms   (82.56 ms .. 83.78 ms)
+                     1.000 R²   (0.999 R² .. 1.000 R²)
+mean                 82.82 ms   (82.27 ms .. 83.17 ms)
+std dev              733.9 μs   (543.9 μs .. 915.5 μs)
 ```
 
 ### Foreign Library
