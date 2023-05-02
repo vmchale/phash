@@ -51,7 +51,7 @@ library
     other-extensions:   FlexibleContexts TypeFamilies
     ghc-options:        -Wall -O2
     build-depends:
-        base >=4.8 && <5,
+        base >=4.10 && <5,
         hip,
         vector-algorithms,
         vector,
@@ -69,7 +69,7 @@ library
         ghc-options: -fllvm
 
     if flag(with-phash)
-        pkgconfig-depends: pHash
+        extra-libraries: pHash
 
     if flag(with-phash)
         exposed-modules: ForeignHash
