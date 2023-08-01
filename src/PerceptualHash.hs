@@ -7,10 +7,9 @@ module PerceptualHash ( imgHash
                       , hammingDistance
                       ) where
 
+import           Codec.Avif                    (decode)
 import qualified Codec.Picture                 as JuicyPixels
-#ifdef WEBP
 import           Codec.Picture.WebP            (decodeRgb8)
-#endif
 import           Control.Monad.ST              (runST)
 import           Data.Bits                     (Bits, popCount, shiftL, xor, (.|.))
 import qualified Data.ByteString               as BS
@@ -19,8 +18,8 @@ import qualified Data.Vector.Generic           as V
 import qualified Data.Vector.Storable          as VS
 import           Data.Word                     (Word64, Word8)
 import           Graphics.Image                (Array, Bilinear (..), Border (Edge, Reflect), Image,
-                                                Pixel (PixelX, PixelY), RGB, RSU (..), VS, X, Y,
-                                                convert, convolve, crop, makeImage, readImage,
+                                                Pixel (PixelX, PixelY), RGB, RGBA, RSU (..), VS, X,
+                                                Y, convert, convolve, crop, makeImage, readImage,
                                                 resize, transpose, (|*|))
 import           Graphics.Image.Interface      (fromVector, toVector)
 import qualified Graphics.Image.Interface      as Hip
@@ -37,7 +36,7 @@ hammingDistance x y = popCount (x `xor` y)
 
 dct32 :: (Floating e, Array arr Y e) => Image arr Y e
 dct32 = makeImage (32,32) gen
-    where gen (i,j) = PixelY $ sqrt(2/n) * cos((fromIntegral ((2*i) * (j-1)) * pi)/(2*n))
+    where gen (i,j) = PixelY $ sqrt(2/n) * cos((fromIntegral (i * (j-1)) * pi)/n)
           n = 32
 
 idMat :: (Fractional e, Array arr X e) => Image arr X e
@@ -80,13 +79,12 @@ aboveMed v =
     let med = medianImmut v
     in V.map (<med) v
 
-#ifdef WEBP
 {-# INLINE fileWebp #-}
 fileWebp :: FilePath -> IO (Image VS RGB Word8)
 fileWebp fp = do
     contents <- BS.readFile fp
     let (JuicyPixels.Image m n pixels) = decodeRgb8 contents
-    pure $ fromVector (m, n) $ VS.unsafeCast pixels
+    pure $ fromVector (n, m) $ VS.unsafeCast pixels
 
 {-# INLINE readWebp #-}
 readWebp :: FilePath -> IO (Image VS Y Double)
@@ -99,11 +97,22 @@ fileHashWebp = fmap (imgHash . convRepa) . readWebp
 
 fileHash :: FilePath -> IO (Either String Word64)
 fileHash fp | ".webp" `isSuffixOf` fp = pure <$> fileHashWebp fp
+            | ".avif" `isSuffixOf` fp = pure <$> fileHashAvif fp
             | otherwise = fileHashHip fp
-#else
-fileHash :: FilePath -> IO (Either String Word64)
-fileHash = fileHashHip
-#endif
+
+{-# INLINE readAvif #-}
+readAvif :: FilePath -> IO (Image VS Y Double)
+readAvif = fmap convert . fileAvif
+
+fileHashAvif :: FilePath -> IO Word64
+fileHashAvif = fmap (imgHash . convRepa) . readAvif
+    where convRepa = fromRepaArrayS . toRepaArray
+
+{-# INLINE fileAvif #-}
+fileAvif :: FilePath -> IO (Image VS RGBA Word8)
+fileAvif fp = do
+    (JuicyPixels.Image m n pixels) <- decode <$> BS.readFile fp
+    pure $ fromVector (n, m) $ VS.unsafeCast pixels
 
 fileHashHip :: FilePath -> IO (Either String Word64)
 fileHashHip = fmap (fmap (imgHash :: Image RSU Y Double -> Word64)) . readImage

@@ -20,9 +20,12 @@ main = hspec $
             expected <- fileHash "demo-data/frog.png"
             actual `shouldSatisfy` (/= expected)
 
-#ifdef WEBP
+        parallel $ it "should match when same" $ do
+            actual <- fileHash "demo-data/fashion.avif"
+            expected <- fileHash "demo-data/fashion.png"
+            actual `shouldBe` expected
+
         parallel $ it "should match when same" $ do
             actual <- fileHash "demo-data/liz-taylor.webp"
             expected <- fileHash "demo-data/liz-taylor.png"
             actual `shouldBe` expected
-#endif
