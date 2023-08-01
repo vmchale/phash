@@ -9,7 +9,7 @@ import           PerceptualHash  (fileHash)
 import           System.FilePath (takeFileName)
 
 mkBGroup :: NFData a => String -> (FilePath -> IO a) -> Benchmark
-mkBGroup str f = bgroup str (toBench <$> [catPath, frogJpeg, frogPng, lizTaylorWebp, lizTaylorPng])
+mkBGroup str f = bgroup str (toBench <$> [catPath, frogJpeg, frogPng, lizTaylorWebp, lizTaylorPng, fashionPng, fashionAvif])
 
     where toBench fp = bench (takeFileName fp) $ nfIO (f fp)
           catPath = "demo-data/cat.png"
@@ -17,6 +17,8 @@ mkBGroup str f = bgroup str (toBench <$> [catPath, frogJpeg, frogPng, lizTaylorW
           frogPng = "demo-data/frog.png"
           lizTaylorWebp = "demo-data/liz-taylor.webp"
           lizTaylorPng = "demo-data/liz-taylor.png"
+          fashionPng = "demo-data/fashion.png"
+          fashionAvif = "demo-data/fashion.avif"
 
 main :: IO ()
 main =
