@@ -112,7 +112,6 @@ foreign-library hsphash
 
 executable phash
     main-is:            Main.hs
-    build-tool-depends: cpphs:cpphs
     hs-source-dirs:     app
     other-modules:
         Paths_perceptual_hash

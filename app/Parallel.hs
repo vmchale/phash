@@ -24,9 +24,8 @@ imgExtension ".TGA"  = True
 imgExtension ".tga"  = True
 imgExtension ".tif"  = True
 imgExtension ".tiff" = True
-#ifdef WEBP
 imgExtension ".webp" = True
-#endif
+imgExtension ".avif" = True
 imgExtension _       = False
 
 insertHash :: FilePath -> IO (M.Map Word64 (NonEmpty FilePath) -> M.Map Word64 (NonEmpty FilePath))
