@@ -1,9 +1,5 @@
 # phash
 
-[![Hackage CI](https://matrix.hackage.haskell.org/api/v2/packages/perceptual-hash/badge)](https://matrix.hackage.haskell.org/package/perceptual-hash)
-[![Hackage](https://img.shields.io/hackage/v/perceptual-hash.svg)](http://hackage.haskell.org/package/perceptual-hash)
-[![Dependencies of latest version on Hackage](https://img.shields.io/hackage-deps/v/perceptual-hash.svg)](https://hackage.haskell.org/package/perceptual-hash)
-
 This is a Haskell [library](http://hackage.haskell.org/package/perceptual-hash)
 to detect (potential) duplicate images.
 
@@ -49,69 +45,99 @@ You can find library documentation on
 
 ### Performance
 
-This library has varying performance compared to the pHash library.
+This library has performs better on WebP, AVIF images and worse on JPEG images compared to the pHash library.
 
 ```
 benchmarking fileHash/cat.png
-time                 20.84 ms   (20.63 ms .. 21.00 ms)
+time                 21.50 ms   (21.23 ms .. 21.70 ms)
                      1.000 R²   (0.999 R² .. 1.000 R²)
-mean                 21.00 ms   (20.89 ms .. 21.30 ms)
-std dev              393.4 μs   (172.3 μs .. 722.2 μs)
+mean                 21.54 ms   (21.39 ms .. 21.88 ms)
+std dev              525.3 μs   (224.2 μs .. 946.8 μs)
 
 benchmarking fileHash/frog.jpeg
-time                 18.66 ms   (18.50 ms .. 18.84 ms)
-                     1.000 R²   (0.999 R² .. 1.000 R²)
-mean                 18.44 ms   (18.34 ms .. 18.54 ms)
-std dev              230.2 μs   (167.5 μs .. 303.0 μs)
+time                 21.33 ms   (20.57 ms .. 22.01 ms)
+                     0.997 R²   (0.996 R² .. 0.999 R²)
+mean                 19.84 ms   (19.53 ms .. 20.24 ms)
+std dev              822.7 μs   (654.3 μs .. 1.070 ms)
+variance introduced by outliers: 13% (moderately inflated)
 
 benchmarking fileHash/frog.png
-time                 11.78 ms   (11.70 ms .. 11.86 ms)
-                     1.000 R²   (0.999 R² .. 1.000 R²)
-mean                 11.81 ms   (11.78 ms .. 11.86 ms)
-std dev              103.9 μs   (74.32 μs .. 149.0 μs)
+time                 12.31 ms   (11.88 ms .. 12.66 ms)
+                     0.997 R²   (0.994 R² .. 0.999 R²)
+mean                 12.46 ms   (12.34 ms .. 12.58 ms)
+std dev              314.3 μs   (256.0 μs .. 385.0 μs)
 
 benchmarking fileHash/liz-taylor.webp
-time                 106.8 ms   (105.2 ms .. 108.1 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 109.5 ms   (108.2 ms .. 111.7 ms)
-std dev              2.642 ms   (1.546 ms .. 4.081 ms)
-
-benchmarking fileHash/liz-taylor.png
-time                 71.42 ms   (70.83 ms .. 72.24 ms)
-                     1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 72.60 ms   (71.71 ms .. 74.85 ms)
-std dev              2.304 ms   (688.1 μs .. 3.802 ms)
-
-benchmarking foreignHash/cat.png
-time                 23.12 ms   (23.00 ms .. 23.21 ms)
-                     1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 23.15 ms   (23.09 ms .. 23.22 ms)
-std dev              151.9 μs   (121.8 μs .. 210.6 μs)
-
-benchmarking foreignHash/frog.jpeg
-time                 8.430 ms   (8.266 ms .. 8.582 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 8.313 ms   (8.286 ms .. 8.377 ms)
-std dev              111.3 μs   (70.34 μs .. 194.5 μs)
-
-benchmarking foreignHash/frog.png
-time                 11.78 ms   (11.74 ms .. 11.83 ms)
-                     1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 11.80 ms   (11.77 ms .. 11.82 ms)
-std dev              80.07 μs   (63.46 μs .. 98.00 μs)
-
-benchmarking foreignHash/liz-taylor.webp
-time                 331.4 ms   (329.3 ms .. 333.7 ms)
-                     1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 331.6 ms   (330.7 ms .. 332.6 ms)
-std dev              1.212 ms   (920.0 μs .. 1.524 ms)
+time                 69.02 ms   (68.00 ms .. 70.23 ms)
+                     0.999 R²   (0.997 R² .. 1.000 R²)
+mean                 71.69 ms   (70.28 ms .. 74.98 ms)
+std dev              3.688 ms   (1.345 ms .. 6.107 ms)
 variance introduced by outliers: 16% (moderately inflated)
 
-benchmarking foreignHash/liz-taylor.png
-time                 83.30 ms   (82.56 ms .. 83.78 ms)
+benchmarking fileHash/liz-taylor.png
+time                 72.32 ms   (70.35 ms .. 74.49 ms)
+                     0.998 R²   (0.996 R² .. 1.000 R²)
+mean                 73.83 ms   (72.60 ms .. 75.38 ms)
+std dev              2.414 ms   (1.655 ms .. 3.614 ms)
+
+benchmarking fileHash/fashion.png
+time                 142.0 ms   (131.6 ms .. 153.4 ms)
+                     0.997 R²   (0.991 R² .. 1.000 R²)
+mean                 145.8 ms   (142.0 ms .. 153.9 ms)
+std dev              7.690 ms   (2.694 ms .. 11.43 ms)
+variance introduced by outliers: 13% (moderately inflated)
+
+benchmarking fileHash/fashion.avif
+time                 172.2 ms   (161.5 ms .. 187.6 ms)
+                     0.996 R²   (0.991 R² .. 1.000 R²)
+mean                 175.1 ms   (169.3 ms .. 185.3 ms)
+std dev              12.16 ms   (5.052 ms .. 18.42 ms)
+variance introduced by outliers: 13% (moderately inflated)
+
+benchmarking foreignHash/cat.png
+time                 21.06 ms   (20.88 ms .. 21.19 ms)
                      1.000 R²   (0.999 R² .. 1.000 R²)
-mean                 82.82 ms   (82.27 ms .. 83.17 ms)
-std dev              733.9 μs   (543.9 μs .. 915.5 μs)
+mean                 20.94 ms   (20.80 ms .. 21.06 ms)
+std dev              320.2 μs   (225.5 μs .. 418.3 μs)
+
+benchmarking foreignHash/frog.jpeg
+time                 9.255 ms   (9.168 ms .. 9.378 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 9.234 ms   (9.201 ms .. 9.273 ms)
+std dev              94.68 μs   (79.14 μs .. 120.7 μs)
+
+benchmarking foreignHash/frog.png
+time                 10.37 ms   (10.28 ms .. 10.47 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 10.42 ms   (10.37 ms .. 10.48 ms)
+std dev              135.4 μs   (106.5 μs .. 184.9 μs)
+
+benchmarking foreignHash/liz-taylor.webp
+time                 368.7 ms   (352.4 ms .. 391.1 ms)
+                     1.000 R²   (0.999 R² .. 1.000 R²)
+mean                 362.3 ms   (357.6 ms .. 366.4 ms)
+std dev              5.133 ms   (1.154 ms .. 6.530 ms)
+variance introduced by outliers: 19% (moderately inflated)
+
+benchmarking foreignHash/liz-taylor.png
+time                 71.58 ms   (71.12 ms .. 72.03 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 71.84 ms   (71.66 ms .. 72.24 ms)
+std dev              502.0 μs   (339.8 μs .. 710.2 μs)
+
+benchmarking foreignHash/fashion.png
+time                 162.1 ms   (160.6 ms .. 162.8 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 163.4 ms   (162.9 ms .. 164.3 ms)
+std dev              990.0 μs   (544.6 μs .. 1.476 ms)
+variance introduced by outliers: 12% (moderately inflated)
+
+benchmarking foreignHash/fashion.avif
+time                 705.5 ms   (669.6 ms .. 757.2 ms)
+                     0.999 R²   (0.998 R² .. 1.000 R²)
+mean                 716.4 ms   (710.3 ms .. 728.3 ms)
+std dev              11.54 ms   (1.129 ms .. 13.84 ms)
+variance introduced by outliers: 19% (moderately inflated)
 ```
 
 ### Foreign Library
