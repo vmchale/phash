@@ -1,5 +1,9 @@
 # phash
 
+## 0.1.4.6
+
+  * Add support for `.avif` images
+
 ## 0.1.4.5
 
   * Modest performance improvements
