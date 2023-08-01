@@ -3,4 +3,10 @@ packages: ./
 
 max-backjumps: 160000000
 
-constraints: hip +disable-chart
+package perceptual-hash
+  flags: +with-phash
+
+package zlib
+  flags: +bundled-c-zlib -pkg-config
+
+constraints: hip +disable-chart, zlib >=0.6.3.0
