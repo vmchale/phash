@@ -1,5 +1,9 @@
 # phash
 
+## 0.1.4.7
+
+  * Reinstate `disable-webp` flag, add `disable-avif` flag
+
 ## 0.1.4.6
 
   * Add support for `.avif` images
