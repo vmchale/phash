@@ -7,9 +7,13 @@ module PerceptualHash ( imgHash
                       , hammingDistance
                       ) where
 
+#ifdef AVIF
 import           Codec.Avif                    (decode)
+#endif
 import qualified Codec.Picture                 as JuicyPixels
+#ifdef WEBP
 import           Codec.Picture.WebP            (decodeRgb8)
+#endif
 import           Control.Monad.ST              (runST)
 import           Data.Bits                     (Bits, popCount, shiftL, xor, (.|.))
 import qualified Data.ByteString               as BS
@@ -79,6 +83,7 @@ aboveMed v =
     let med = medianImmut v
     in V.map (<med) v
 
+#ifdef WEBP
 {-# INLINE fileWebp #-}
 fileWebp :: FilePath -> IO (Image VS RGB Word8)
 fileWebp fp = do
@@ -94,12 +99,19 @@ fileHashWebp :: FilePath -> IO Word64
 fileHashWebp = fmap (imgHash . convRepa) . readWebp
     -- faster
     where convRepa = fromRepaArrayS . toRepaArray
+#endif
 
 fileHash :: FilePath -> IO (Either String Word64)
-fileHash fp | ".webp" `isSuffixOf` fp = pure <$> fileHashWebp fp
-            | ".avif" `isSuffixOf` fp = pure <$> fileHashAvif fp
-            | otherwise = fileHashHip fp
+fileHash fp
+#ifdef WEBP
+    | ".webp" `isSuffixOf` fp = pure <$> fileHashWebp fp
+#endif
+#ifdef AVIF
+    | ".avif" `isSuffixOf` fp = pure <$> fileHashAvif fp
+#endif
+    | otherwise = fileHashHip fp
 
+#ifdef AVIF
 {-# INLINE readAvif #-}
 readAvif :: FilePath -> IO (Image VS Y Double)
 readAvif = fmap convert . fileAvif
@@ -113,6 +125,7 @@ fileAvif :: FilePath -> IO (Image VS RGBA Word8)
 fileAvif fp = do
     (JuicyPixels.Image m n pixels) <- decode <$> BS.readFile fp
     pure $ fromVector (n, m) $ VS.unsafeCast pixels
+#endif
 
 fileHashHip :: FilePath -> IO (Either String Word64)
 fileHashHip = fmap (fmap (imgHash :: Image RSU Y Double -> Word64)) . readImage

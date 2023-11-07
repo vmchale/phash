@@ -39,6 +39,10 @@ flag disable-webp
     description: Don't depend on webp FFI bindings
     default:     False
 
+flag disable-avif
+    description: Don't depend on avif FFI bindings
+    default:     False
+
 flag llvm
     description: Use LLVM backend to GHC rather than NCG
     default:     False
@@ -51,6 +55,7 @@ library
     default-language:   Haskell2010
     other-extensions:   FlexibleContexts TypeFamilies
     ghc-options:        -Wall -O2
+    build-tool-depends: cpphs:cpphs
     build-depends:
         base >=4.10 && <5,
         hip,
@@ -58,9 +63,15 @@ library
         vector,
         primitive,
         bytestring,
-        JuicyPixels,
-        avif,
-        webp >=0.1.0.3
+        JuicyPixels
+
+    if !flag(disable-webp)
+        build-depends: webp >=0.1.0.3
+        cpp-options: -DWEBP
+
+    if !flag(disable-avif)
+        build-depends: avif
+        cpp-options: -DAVIF
 
     if flag(llvm)
         ghc-options: -fllvm
@@ -122,6 +133,14 @@ executable phash
     default-language:   Haskell2010
     other-extensions:   ScopedTypeVariables
     ghc-options:        -Wall -threaded -rtsopts "-with-rtsopts=-N -qg"
+
+    if !flag(disable-webp)
+        cpp-options: -DWEBP
+
+    if !flag(disable-avif)
+        cpp-options: -DAVIF
+
+    build-tool-depends: cpphs:cpphs
     build-depends:
         base >=4.9 && <5,
         perceptual-hash,
