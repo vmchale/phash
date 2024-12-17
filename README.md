@@ -27,7 +27,7 @@ phash ~/Pictures ~/Downloads
 
 ### Pre-Built Release
 
-For many platforms, you can find binaries [here](https://www.permanent.org/p/archive/0236-0000/0236-0019/410841).
+For some platforms, you can find binaries [here](https://www.permanent.org/p/archive/0236-0000/0236-0019/410841).
 
 ### Source
 
@@ -38,10 +38,12 @@ Download [cabal-install](https://www.haskell.org/cabal/download.html) and
 cabal install perceptual-hash --constraint='hip +disable-chart'
 ```
 
-## Library
+You may need
 
-You can find library documentation on
-[Hackage](https://hackage.haskell.org/package/perceptual-hash).
+```cabal
+package hip
+  ghc-options: -fsimpl-tick-factor=200
+```
 
 ### Performance
 
@@ -144,8 +146,3 @@ variance introduced by outliers: 19% (moderately inflated)
 
 This package contains a foreign library and a [header
 file](https://hackage.haskell.org/package/perceptual-hash/src/include/hs_phash.h)
-
-#### ATS Bindings
-
-Because of the foreign library, `hs_phash` can be used in ATS as well. ATS users
-of the library may be interested in [hs-bind](https://github.com/vmchale/hs-bind).
