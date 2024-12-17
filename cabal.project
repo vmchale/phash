@@ -1,9 +1,10 @@
 packages: ./
         , par-traverse
 
-max-backjumps: 160000000
-
 package zlib
-  flags: +bundled-c-zlib -pkg-config
+  flags: +bundled-c-zlib
+
+package hip
+  ghc-options: -fsimpl-tick-factor=200
 
 constraints: hip +disable-chart
