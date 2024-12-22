@@ -93,6 +93,9 @@ library
     if impl(ghc >=8.10)
         ghc-options: -Wunused-packages
 
+    if impl(ghc >=9.0)
+        ghc-options: -Winvalid-haddock
+
 foreign-library hsphash
     type:             native-shared
     hs-source-dirs:   foreign-src
@@ -120,6 +123,9 @@ foreign-library hsphash
 
     if impl(ghc >=8.10)
         ghc-options: -Wunused-packages
+
+    if impl(ghc >=9.0)
+        ghc-options: -Winvalid-haddock
 
 executable phash
     main-is:            Main.hs
