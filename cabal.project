@@ -5,6 +5,5 @@ package zlib
   flags: +bundled-c-zlib
 
 package hip
+  flags: +disable-chart
   ghc-options: -fsimpl-tick-factor=200
-
-constraints: hip +disable-chart
