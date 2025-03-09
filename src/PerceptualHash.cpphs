@@ -13,11 +13,12 @@ import           Codec.Avif                    (decode)
 #endif
 import qualified Codec.Picture                 as JuicyPixels
 #ifdef WEBP
-import           Codec.Picture.WebP            (decodeRgb8)
+import           Codec.Picture.WebP            (decodeRgb8, isAnim)
 #endif
 import           Control.Monad.ST              (runST)
 import           Data.Bits                     (Bits, popCount, shiftL, xor, (.|.))
 import qualified Data.ByteString               as BS
+import qualified Data.ByteString.Lazy          as BSL
 import           Data.List                     (isSuffixOf)
 import qualified Data.Vector.Generic           as V
 import qualified Data.Vector.Storable          as VS
@@ -85,19 +86,15 @@ aboveMed v =
     in V.map (<med) v
 
 #ifdef WEBP
-{-# INLINE fileWebp #-}
-fileWebp :: FilePath -> IO (Image VS RGB Word8)
-fileWebp fp = do
-    contents <- BS.readFile fp
-    let (JuicyPixels.Image m n pixels) = decodeRgb8 contents
-    pure $ fromVector (n, m) $ VS.unsafeCast pixels
+{-# INLINE webpMono #-}
+webpMono :: BS.ByteString -> Image VS Y Double
+webpMono = convert . dWebp where
+    dWebp :: BS.ByteString -> Image VS RGB Word8
+    dWebp bs = fromVector (n, m) $ VS.unsafeCast pixels
+        where (JuicyPixels.Image m n pixels) = decodeRgb8 bs
 
-{-# INLINE readWebp #-}
-readWebp :: FilePath -> IO (Image VS Y Double)
-readWebp = fmap convert . fileWebp
-
-fileHashWebp :: FilePath -> IO Word64
-fileHashWebp = fmap (imgHash . convRepa) . readWebp
+hashWebp :: BS.ByteString -> Word64
+hashWebp = imgHash . convRepa . webpMono
     -- faster
     where convRepa = fromRepaArrayS . toRepaArray
 #endif
@@ -105,7 +102,9 @@ fileHashWebp = fmap (imgHash . convRepa) . readWebp
 fileHash :: FilePath -> IO (Either String Word64)
 fileHash fp
 #ifdef WEBP
-    | ".webp" `isSuffixOf` fp = pure <$> fileHashWebp fp
+    | ".webp" `isSuffixOf` fp = do
+        contents <- BS.readFile fp
+        pure (if isAnim (BSL.fromStrict contents) then Left "Animated .webp skipped..." else Right$hashWebp contents)
 #endif
 #ifdef AVIF
     | ".avif" `isSuffixOf` fp = pure <$> fileHashAvif fp
