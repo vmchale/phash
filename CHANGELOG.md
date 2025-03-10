@@ -1,5 +1,9 @@
 # phash
 
+## 0.1.4.8
+
+  * Don't segfault on animated WebP
+
 ## 0.1.4.7
 
   * Reinstate `disable-webp` flag, add `disable-avif` flag
