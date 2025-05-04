@@ -75,15 +75,11 @@ imgHash :: (Ord e, Floating e, Array arr Y e, Array arr X e, V.Vector (Hip.Vecto
 imgHash = asWord64 . aboveMed . V.map (\(PixelY x) -> x) . toVector . crop8 . dct . size32 . meanFilter
 
 asWord64 :: V.Vector v Bool => v Bool -> Word64
-asWord64 = V.foldl' (\acc x -> (acc `shiftL` 1) .|. boolToWord64 x) 0
-    where boolToWord64 :: Bool -> Word64
-          boolToWord64 False = 0
-          boolToWord64 True  = 1
+asWord64 = V.foldl' (\acc x -> (acc `shiftL` 1) .|. w64 x) 0
+    where w64 True = 1; w64 False = 0
 
 aboveMed :: (Fractional e, V.Vector v e, V.Vector v Bool, Ord e) => v e -> v Bool
-aboveMed v =
-    let med = medianImmut v
-    in V.map (<med) v
+aboveMed v = let med = medianImmut v in V.map (<med) v
 
 #ifdef WEBP
 {-# INLINE webpMono #-}
