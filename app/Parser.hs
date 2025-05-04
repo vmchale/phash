@@ -14,14 +14,18 @@ debug =
     (long "debug"
     <> help "Show debug output")
 
-targets :: Parser ([FilePath], Bool)
-targets = (,)
+targets :: Parser ([FilePath], Bool, [FilePath])
+targets = (,,)
     <$> some (argument str
              (metavar "DIRECTORY"
              <> help "Directory to include"))
     <*> debug
+    <*> many (strOption
+             (long "exclude"
+             <> metavar "EXCLUDE"
+             <> help "Directory to exclude"))
 
-wrapper :: ParserInfo ([FilePath], Bool)
+wrapper :: ParserInfo ([FilePath], Bool, [FilePath])
 wrapper = info (helper <* versionInfo <*> targets)
     (fullDesc
     <> progDesc "A command-line tool to detect duplicate images."

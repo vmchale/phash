@@ -48,10 +48,10 @@ stepMap var fp = do
     mod' <- insertHash fp
     atomically $ modifyTVar' var mod'
 
-pathMaps :: [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
-pathMaps fps = do
+pathMaps :: [FilePath] -> [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
+pathMaps fps excls = do
     total <- newTVarIO mempty
-    parTraverseAll (stepMap total) fileFilter (\_ -> pure True) fps
+    parTraverseAll (stepMap total) fileFilter (\fp -> pure (fp `notElem` excls)) fps
     readTVarIO total
 
     where fileFilter = pure . imgExtension . takeExtension
