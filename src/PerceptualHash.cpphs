@@ -13,7 +13,7 @@ import           Codec.Avif                    (decode)
 #endif
 import qualified Codec.Picture                 as JuicyPixels
 #ifdef WEBP
-import           Codec.Picture.WebP            (decodeRgb8, isAnim)
+import           Codec.Picture.WebP            (decodeRgb8, isAnimLenient)
 #endif
 import           Control.Monad.ST              (runST)
 import           Data.Bits                     (Bits, popCount, shiftL, xor, (.|.))
@@ -100,7 +100,7 @@ fileHash fp
 #ifdef WEBP
     | ".webp" `isSuffixOf` fp = do
         contents <- BS.readFile fp
-        pure (if isAnim (BSL.fromStrict contents) then Left "Animated .webp skipped..." else Right$hashWebp contents)
+        pure (case isAnimLenient (BSL.fromStrict contents) of {Right True -> Left "Animated .webp skipped..."; Right _ -> Right$hashWebp contents; Left e -> Left (fp ++ ": " ++ e)})
 #endif
 #ifdef AVIF
     | ".avif" `isSuffixOf` fp = pure <$> fileHashAvif fp
