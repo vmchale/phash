@@ -3,6 +3,7 @@
 ## 0.1.4.8
 
   * Don't segfault on animated WebP
+  * Add `--exclude` command-line flag
 
 ## 0.1.4.7
 
