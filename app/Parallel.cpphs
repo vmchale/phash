@@ -11,6 +11,7 @@ import           Data.Word                   (Word64)
 import           PerceptualHash              (fileHash)
 import           System.Directory.Parallel   (parTraverseAll)
 import           System.FilePath             (takeExtension)
+import           System.IO                   (hPutStrLn, stderr)
 
 imgExtension :: String -> Bool
 imgExtension ".jpg"  = True
@@ -33,23 +34,23 @@ imgExtension ".avif" = True
 #endif
 imgExtension _       = False
 
-insertHash :: FilePath -> IO (M.Map Word64 (NonEmpty FilePath) -> M.Map Word64 (NonEmpty FilePath))
+insertHash :: FilePath -> IO (M.Map Word64 (NonEmpty (FilePath, (Int, Int))) -> M.Map Word64 (NonEmpty (FilePath, (Int, Int))))
 insertHash fp = do
-    hash <- fileHash fp
-    case hash of
-        Right x ->
+    res <- fileHash fp
+    case res of
+        Right (x, d) ->
             pure $ \hashes ->
-                let go (Just others) = Just (fp <| others)
-                    go Nothing       = Just (fp :| [])
+                let go (Just others) = Just ((fp, d) <| others)
+                    go Nothing       = Just ((fp, d) :| [])
                     in M.alter go x hashes
-        Left err -> putStrLn ("WARNING: skipping " ++ fp ++ "\n" ++ err) $> id
+        Left err -> hPutStrLn stderr ("WARNING: skipping " ++ fp ++ "\n" ++ err) $> id
 
-stepMap :: TVar (M.Map Word64 (NonEmpty FilePath)) -> FilePath -> IO ()
+stepMap :: TVar (M.Map Word64 (NonEmpty (FilePath, (Int, Int)))) -> FilePath -> IO ()
 stepMap var fp = do
     mod' <- insertHash fp
     atomically $ modifyTVar' var mod'
 
-pathMaps :: [FilePath] -> [FilePath] -> IO (M.Map Word64 (NonEmpty FilePath))
+pathMaps :: [FilePath] -> [FilePath] -> IO (M.Map Word64 (NonEmpty (FilePath, (Int, Int))))
 pathMaps fps excls = do
     total <- newTVarIO mempty
     parTraverseAll (stepMap total) fileFilter (\fp -> pure (fp `notElem` excls)) fps

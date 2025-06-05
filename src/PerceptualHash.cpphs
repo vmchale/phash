@@ -15,6 +15,7 @@ import qualified Codec.Picture                 as JuicyPixels
 #ifdef WEBP
 import           Codec.Picture.WebP            (decodeRgb8, isAnimLenient)
 #endif
+import           Control.Arrow                 ((&&&))
 import           Control.Monad.ST              (runST)
 import           Data.Bits                     (Bits, popCount, shiftL, xor, (.|.))
 import qualified Data.ByteString               as BS
@@ -27,7 +28,7 @@ import           Graphics.Image                (Array, Bilinear (..), Border (Ed
                                                 Pixel (PixelX, PixelY), RGB, RGBA, RSU (..), VS, X,
                                                 Y, convert, convolve, crop, makeImage, readImage,
                                                 resize, transpose, (|*|))
-import           Graphics.Image.Interface      (fromVector, toVector)
+import           Graphics.Image.Interface      (dims, fromVector, toVector)
 import qualified Graphics.Image.Interface      as Hip
 import           Graphics.Image.Interface.Repa (fromRepaArrayS, toRepaArray)
 import           Median                        (median)
@@ -89,13 +90,13 @@ webpMono = convert . dWebp where
     dWebp bs = fromVector (n, m) $ VS.unsafeCast pixels
         where (JuicyPixels.Image m n pixels) = decodeRgb8 bs
 
-hashWebp :: BS.ByteString -> Word64
-hashWebp = imgHash . convRepa . webpMono
+hashWebp :: BS.ByteString -> (Word64, (Int, Int))
+hashWebp = (imgHash &&& dims) . convRepa . webpMono
     -- faster
     where convRepa = fromRepaArrayS . toRepaArray
 #endif
 
-fileHash :: FilePath -> IO (Either String Word64)
+fileHash :: FilePath -> IO (Either String (Word64, (Int, Int)))
 fileHash fp
 #ifdef WEBP
     | ".webp" `isSuffixOf` fp = do
@@ -112,8 +113,8 @@ fileHash fp
 readAvif :: FilePath -> IO (Image VS Y Double)
 readAvif = fmap convert . fileAvif
 
-fileHashAvif :: FilePath -> IO Word64
-fileHashAvif = fmap (imgHash . convRepa) . readAvif
+fileHashAvif :: FilePath -> IO (Word64, (Int, Int))
+fileHashAvif = fmap ((imgHash . convRepa) &&& dims) . readAvif
     where convRepa = fromRepaArrayS . toRepaArray
 
 {-# INLINE fileAvif #-}
@@ -123,5 +124,5 @@ fileAvif fp = do
     pure $ fromVector (n, m) $ VS.unsafeCast pixels
 #endif
 
-fileHashHip :: FilePath -> IO (Either String Word64)
-fileHashHip = fmap (fmap (imgHash :: Image RSU Y Double -> Word64)) . readImage
+fileHashHip :: FilePath -> IO (Either String (Word64, (Int, Int)))
+fileHashHip = fmap (fmap ((imgHash :: Image RSU Y Double -> Word64) &&& dims)) . readImage
