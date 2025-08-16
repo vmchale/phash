@@ -11,6 +11,7 @@ import           Data.Word                   (Word64)
 import           PerceptualHash              (fileHash)
 import           System.Directory.Parallel   (parTraverseAll)
 import           System.FilePath             (takeExtension)
+import           System.IO                   (hPutStrLn, stderr)
 
 imgExtension :: String -> Bool
 imgExtension ".jpg"  = True
@@ -42,7 +43,7 @@ insertHash fp = do
                 let go (Just others) = Just (fp <| others)
                     go Nothing       = Just (fp :| [])
                     in M.alter go x hashes
-        Left err -> putStrLn ("WARNING: skipping " ++ fp ++ "\n" ++ err) $> id
+        Left err -> hPutStrLn stderr ("WARNING: skipping " ++ fp ++ "\n" ++ err) $> id
 
 stepMap :: TVar (M.Map Word64 (NonEmpty FilePath)) -> FilePath -> IO ()
 stepMap var fp = do
