@@ -26,6 +26,7 @@ imgExtension ".avif" = True
 #endif
 imgExtension _       = False
 
+{-# SCC insertHash #-}
 insertHash :: FilePath -> IO (M.Map Word64 (NonEmpty (FilePath, (Int, Int))) -> M.Map Word64 (NonEmpty (FilePath, (Int, Int))))
 insertHash fp = do
     img <- fileHashDim fp
@@ -37,6 +38,7 @@ insertHash fp = do
                     in M.alter go hash hashes
         Left err -> hPutStrLn stderr ("WARNING: skipping " ++ fp ++ "\n" ++ err) $> id
 
+{-# SCC stepMap #-}
 stepMap :: TVar (M.Map Word64 (NonEmpty (FilePath, (Int, Int)))) -> FilePath -> IO ()
 stepMap var fp = do
     mod' <- insertHash fp

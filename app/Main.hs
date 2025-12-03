@@ -15,9 +15,11 @@ displayImg (fp, (h,w)) = fp ++ " (" ++ show h ++ " × " ++ show w ++ ")"
 displayPaths :: NonEmpty (FilePath, (Int, Int)) -> String
 displayPaths = intercalate ", " . toList . fmap displayImg
 
+{-# SCC displayHash #-}
 displayHash :: NonEmpty (FilePath, (Int, Int)) -> Word64 -> String
 displayHash fps h = show h ++ " " ++ displayPaths fps
 
+{-# SCC filterDup #-}
 filterDup :: M.Map Word64 (NonEmpty a) -> M.Map Word64 (NonEmpty a)
 filterDup = M.filter p
     where p :: NonEmpty a -> Bool
@@ -28,6 +30,7 @@ displayDebug :: M.Map Word64 (NonEmpty (FilePath, (Int, Int))) -> String
 displayDebug hashes = intercalate "\n" (mkLine <$> M.toList hashes)
     where mkLine (h, fps) = displayHash fps h
 
+{-# SCC displayAll #-}
 displayAll :: M.Map a (NonEmpty (FilePath, (Int, Int))) -> String
 displayAll fps = intercalate "\n" (displayPaths <$> toList fps)
 
