@@ -9,23 +9,26 @@ import           Options.Applicative (execParser)
 import           Parallel
 import           Parser
 
-displayPaths :: NonEmpty FilePath -> String
-displayPaths = intercalate ", " . toList
+displayImg :: (FilePath, (Int, Int)) -> String
+displayImg (fp, (h,w)) = fp ++ " (" ++ show h ++ " × " ++ show w ++ ")"
 
-displayHash :: NonEmpty FilePath -> Word64 -> String
+displayPaths :: NonEmpty (FilePath, (Int, Int)) -> String
+displayPaths = intercalate ", " . toList . fmap displayImg
+
+displayHash :: NonEmpty (FilePath, (Int, Int)) -> Word64 -> String
 displayHash fps h = show h ++ " " ++ displayPaths fps
 
-filterDup :: M.Map Word64 (NonEmpty FilePath) -> M.Map Word64 (NonEmpty FilePath)
+filterDup :: M.Map Word64 (NonEmpty a) -> M.Map Word64 (NonEmpty a)
 filterDup = M.filter p
-    where p :: NonEmpty FilePath -> Bool
+    where p :: NonEmpty a -> Bool
           p (_ :| (_:_)) = True
           p _            = False
 
-displayDebug :: M.Map Word64 (NonEmpty FilePath) -> String
+displayDebug :: M.Map Word64 (NonEmpty (FilePath, (Int, Int))) -> String
 displayDebug hashes = intercalate "\n" (mkLine <$> M.toList hashes)
     where mkLine (h, fps) = displayHash fps h
 
-displayAll :: M.Map a (NonEmpty FilePath) -> String
+displayAll :: M.Map a (NonEmpty (FilePath, (Int, Int))) -> String
 displayAll fps = intercalate "\n" (displayPaths <$> toList fps)
 
 main :: IO ()

@@ -6,6 +6,7 @@
 module PerceptualHash ( imgHash
                       , fileHash
                       , hammingDistance
+                      , fileHashDim
                       ) where
 
 #ifdef AVIF
@@ -15,6 +16,7 @@ import qualified Codec.Picture                 as JuicyPixels
 #ifdef WEBP
 import           Codec.Picture.WebP            (decodeRgb8, isAnimLenient)
 #endif
+import           Control.Arrow                 ((&&&))
 import           Control.Monad.ST              (runST)
 import           Data.Bits                     (Bits, popCount, shiftL, xor, (.|.))
 import qualified Data.ByteString               as BS
@@ -27,7 +29,7 @@ import           Graphics.Image                (Array, Bilinear (..), Border (Ed
                                                 Pixel (PixelX, PixelY), RGB, RGBA, RSU (..), VS, X,
                                                 Y, convert, convolve, crop, makeImage, readImage,
                                                 resize, transpose, (|*|))
-import           Graphics.Image.Interface      (fromVector, toVector)
+import           Graphics.Image.Interface      (dims, fromVector, toVector)
 import qualified Graphics.Image.Interface      as Hip
 import           Graphics.Image.Interface.Repa (fromRepaArrayS, toRepaArray)
 import           Median                        (median)
@@ -93,6 +95,10 @@ hashWebp :: BS.ByteString -> Word64
 hashWebp = imgHash . convRepa . webpMono
     -- faster
     where convRepa = fromRepaArrayS . toRepaArray
+
+hashWebpDim :: BS.ByteString -> (Word64, (Int, Int))
+hashWebpDim = hashDim . convRepa . webpMono
+    where convRepa = fromRepaArrayS . toRepaArray
 #endif
 
 fileHash :: FilePath -> IO (Either String Word64)
@@ -106,6 +112,15 @@ fileHash fp
     | ".avif" `isSuffixOf` fp = pure <$> fileHashAvif fp
 #endif
     | otherwise = fileHashHip fp
+
+fileHashDim :: FilePath -> IO (Either String (Word64, (Int, Int)))
+fileHashDim fp
+#ifdef WEBP
+    | ".webp" `isSuffixOf` fp = do
+        contents <- BS.readFile fp
+        pure (case isAnimLenient (BSL.fromStrict contents) of {Right True -> Left "Animated .webp skipped..."; Right _ -> Right$hashWebpDim contents; Left e -> Left (fp ++ ": " ++ e)})
+#endif
+    | otherwise = fileHashDimHip fp
 
 #ifdef AVIF
 {-# INLINE readAvif #-}
@@ -122,6 +137,12 @@ fileAvif fp = do
     (JuicyPixels.Image m n pixels) <- decode <$> BS.readFile fp
     pure $ fromVector (n, m) $ VS.unsafeCast pixels
 #endif
+
+hashDim :: (Ord e, Floating e, Array arr Y e, Array arr X e, V.Vector (Hip.Vector arr) Bool, V.Vector (Hip.Vector arr) e) => Image arr Y e -> (Word64, (Int, Int))
+hashDim = imgHash &&& dims
+
+fileHashDimHip :: FilePath -> IO (Either String (Word64, (Int, Int)))
+fileHashDimHip = fmap (fmap (hashDim :: Image RSU Y Double -> (Word64, (Int, Int)))) . readImage
 
 fileHashHip :: FilePath -> IO (Either String Word64)
 fileHashHip = fmap (fmap (imgHash :: Image RSU Y Double -> Word64)) . readImage
