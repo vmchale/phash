@@ -120,12 +120,19 @@ fileHashDim fp
         contents <- BS.readFile fp
         pure (case isAnimLenient (BSL.fromStrict contents) of {Right True -> Left "Animated .webp skipped..."; Right _ -> Right$hashWebpDim contents; Left e -> Left (fp ++ ": " ++ e)})
 #endif
+#ifdef AVIF
+    | ".avif" `isSuffixOf` fp = pure <$> fileHashDimAvif fp
+#endif
     | otherwise = fileHashDimHip fp
 
 #ifdef AVIF
 {-# INLINE readAvif #-}
 readAvif :: FilePath -> IO (Image VS Y Double)
 readAvif = fmap convert . fileAvif
+
+fileHashDimAvif :: FilePath -> IO (Word64, (Int, Int))
+fileHashDimAvif = fmap (hashDim . convRepa) . readAvif
+    where convRepa = fromRepaArrayS . toRepaArray
 
 fileHashAvif :: FilePath -> IO Word64
 fileHashAvif = fmap (imgHash . convRepa) . readAvif
