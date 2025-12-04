@@ -9,14 +9,13 @@ import           Options.Applicative (execParser)
 import           Parallel
 import           Parser
 
-displayImg :: (FilePath, (Int, Int)) -> String
-displayImg (fp, (h,w)) = fp ++ " (" ++ show h ++ " × " ++ show w ++ ")"
+displayImg :: Img -> String
+displayImg (Img fp h w) = fp ++ " (" ++ show h ++ " × " ++ show w ++ ")"
 
-displayPaths :: NonEmpty (FilePath, (Int, Int)) -> String
+displayPaths :: NonEmpty Img -> String
 displayPaths = intercalate ", " . toList . fmap displayImg
 
-{-# SCC displayHash #-}
-displayHash :: NonEmpty (FilePath, (Int, Int)) -> Word64 -> String
+displayHash :: NonEmpty Img -> Word64 -> String
 displayHash fps h = show h ++ " " ++ displayPaths fps
 
 {-# SCC filterDup #-}
@@ -26,12 +25,11 @@ filterDup = M.filter p
           p (_ :| (_:_)) = True
           p _            = False
 
-displayDebug :: M.Map Word64 (NonEmpty (FilePath, (Int, Int))) -> String
+displayDebug :: M.Map Word64 (NonEmpty Img) -> String
 displayDebug hashes = intercalate "\n" (mkLine <$> M.toList hashes)
     where mkLine (h, fps) = displayHash fps h
 
-{-# SCC displayAll #-}
-displayAll :: M.Map a (NonEmpty (FilePath, (Int, Int))) -> String
+displayAll :: M.Map a (NonEmpty Img) -> String
 displayAll fps = intercalate "\n" (displayPaths <$> toList fps)
 
 main :: IO ()

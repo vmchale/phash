@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Parallel ( pathMaps ) where
+module Parallel ( Img (..), pathMaps ) where
 
 import           Control.Concurrent.STM      (atomically)
 import           Control.Concurrent.STM.TVar (TVar, modifyTVar', newTVarIO, readTVarIO)
@@ -26,25 +26,27 @@ imgExtension ".avif" = True
 #endif
 imgExtension _       = False
 
+data Img = Img !FilePath !Int !Int
+
 {-# SCC insertHash #-}
-insertHash :: FilePath -> IO (M.Map Word64 (NonEmpty (FilePath, (Int, Int))) -> M.Map Word64 (NonEmpty (FilePath, (Int, Int))))
+insertHash :: FilePath -> IO (M.Map Word64 (NonEmpty Img) -> M.Map Word64 (NonEmpty Img))
 insertHash fp = do
     img <- fileHashDim fp
     case img of
-        Right (hash, dim) ->
+        Right (hash, (h,w)) ->
             pure $ \hashes ->
-                let go (Just others) = Just ((fp, dim) <| others)
-                    go Nothing       = Just ((fp, dim) :| [])
+                let go (Just others) = Just ((Img fp h w) <| others)
+                    go Nothing       = Just ((Img fp h w) :| [])
                     in M.alter go hash hashes
         Left err -> hPutStrLn stderr ("WARNING: skipping " ++ fp ++ "\n" ++ err) $> id
 
 {-# SCC stepMap #-}
-stepMap :: TVar (M.Map Word64 (NonEmpty (FilePath, (Int, Int)))) -> FilePath -> IO ()
+stepMap :: TVar (M.Map Word64 (NonEmpty Img)) -> FilePath -> IO ()
 stepMap var fp = do
     mod' <- insertHash fp
     atomically $ modifyTVar' var mod'
 
-pathMaps :: [FilePath] -> [FilePath] -> IO (M.Map Word64 (NonEmpty (FilePath, (Int, Int))))
+pathMaps :: [FilePath] -> [FilePath] -> IO (M.Map Word64 (NonEmpty Img))
 pathMaps fps excls = do
     total <- newTVarIO mempty
     parTraverseAll (stepMap total) fileFilter (\fp -> pure (fp `notElem` excls)) fps
