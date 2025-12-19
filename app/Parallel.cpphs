@@ -2,16 +2,16 @@
 
 module Parallel ( Img (..), pathMaps ) where
 
-import           Control.Concurrent.STM      (atomically)
-import           Control.Concurrent.STM.TVar (TVar, modifyTVar', newTVarIO, readTVarIO)
-import           Data.Functor                (($>))
-import           Data.List.NonEmpty          (NonEmpty (..), (<|))
-import qualified Data.Map                    as M
-import           Data.Word                   (Word64)
-import           PerceptualHash              (fileHashDim)
-import           System.Directory.Parallel   (parTraverseAll)
-import           System.FilePath             (takeExtension)
-import           System.IO                   (hPutStrLn, stderr)
+import           Control.Concurrent.STM    (atomically)
+import           Data.List.NonEmpty        (NonEmpty (..))
+import           Data.Word                 (Word64)
+import           Focus                     (insertOrMerge)
+import           ListT                     (toList)
+import           PerceptualHash            (fileHashDim)
+import qualified StmContainers.Map         as M
+import           System.Directory.Parallel (parTraverseAll)
+import           System.FilePath           (takeExtension)
+import           System.IO                 (hPutStrLn, stderr)
 
 imgExtension :: String -> Bool
 imgExtension ".jpg" = True; imgExtension ".JPG" = True; imgExtension ".jpeg" = True;
@@ -28,17 +28,13 @@ imgExtension _       = False
 
 data Img = Img !FilePath !Int !Int
 
-{-# SCC insertHash #-}
-insertHash :: FilePath -> M.Map Word64 (NonEmpty Img) -> IO ()
-insertHash fp hashes = do
+{-# SCC stepMap #-}
+stepMap :: M.Map Word64 (NonEmpty Img) -> FilePath -> IO ()
+stepMap hashes fp = do
     img <- fileHashDim fp
     case img of
         Right (hash, (h,w)) -> atomically $ M.focus (insertOrMerge (<>) (Img fp h w :| [])) hash hashes
         Left err -> hPutStrLn stderr ("WARNING: skipping " ++ fp ++ "\n" ++ err)
-
-{-# SCC stepMap #-}
-stepMap :: M.Map Word64 (NonEmpty Img) -> FilePath -> IO ()
-stepMap var fp = insertHash fp var
 
 pathMaps :: [FilePath] -> [FilePath] -> IO [(Word64, (NonEmpty Img))]
 pathMaps fps excls = do
