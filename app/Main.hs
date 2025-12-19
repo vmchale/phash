@@ -3,7 +3,6 @@ module Main (main) where
 import           Data.Foldable       (toList)
 import           Data.List           (intercalate)
 import           Data.List.NonEmpty  (NonEmpty (..))
-import qualified Data.Map            as M
 import           Data.Word           (Word64)
 import           Options.Applicative (execParser)
 import           Parallel
@@ -19,18 +18,18 @@ displayHash :: NonEmpty Img -> Word64 -> String
 displayHash fps h = show h ++ " " ++ displayPaths fps
 
 {-# SCC filterDup #-}
-filterDup :: M.Map Word64 (NonEmpty a) -> M.Map Word64 (NonEmpty a)
-filterDup = M.filter p
+filterDup :: [(Word64, NonEmpty a)] -> [(Word64, NonEmpty a)]
+filterDup = filter (p.snd)
     where p :: NonEmpty a -> Bool
           p (_ :| (_:_)) = True
           p _            = False
 
-displayDebug :: M.Map Word64 (NonEmpty Img) -> String
-displayDebug hashes = intercalate "\n" (mkLine <$> M.toList hashes)
+displayDebug :: [(Word64, NonEmpty Img)] -> String
+displayDebug hashes = intercalate "\n" (mkLine <$> hashes)
     where mkLine (h, fps) = displayHash fps h
 
-displayAll :: M.Map a (NonEmpty Img) -> String
-displayAll fps = intercalate "\n" (displayPaths <$> toList fps)
+displayAll :: [(a, NonEmpty Img)] -> String
+displayAll fps = intercalate "\n" (displayPaths.snd <$> fps)
 
 main :: IO ()
 main = run =<< execParser wrapper

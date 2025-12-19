@@ -150,11 +150,13 @@ executable phash
     build-depends:
         base >=4.9 && <5,
         perceptual-hash,
-        containers,
         filepath,
         optparse-applicative >=0.13.0.0,
         par-traverse >=0.2.1.0,
-        stm >=2.3
+        stm >=2.3,
+        stm-containers,
+        focus,
+        list-t
 
     if flag(llvm)
         ghc-options: -fllvm
