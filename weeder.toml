@@ -1,0 +1,6 @@
+roots = [
+    '^Main\.main$',
+    '^Paths_',
+    '^PerceptualHash\.((img|file)Hash|hammingDistance|fileHashDim)'
+]
+unused-types = true
