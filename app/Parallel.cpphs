@@ -14,18 +14,10 @@ import           System.FilePath             (takeExtension)
 import           System.IO                   (hPutStrLn, stderr)
 
 imgExtension :: String -> Bool
-imgExtension ".jpg"  = True
-imgExtension ".JPG"  = True
-imgExtension ".jpeg" = True
-imgExtension ".png"  = True
-imgExtension ".gif"  = True
-imgExtension ".hdr"  = True
-imgExtension ".pic"  = True
-imgExtension ".bmp"  = True
-imgExtension ".TGA"  = True
-imgExtension ".tga"  = True
-imgExtension ".tif"  = True
-imgExtension ".tiff" = True
+imgExtension ".jpg" = True; imgExtension ".JPG" = True; imgExtension ".jpeg" = True;
+imgExtension ".png" = True; imgExtension ".gif" = True; imgExtension ".hdr"  = True
+imgExtension ".pic" = True; imgExtension ".bmp" = True; imgExtension ".TGA"  = True
+imgExtension ".tga" = True; imgExtension ".tif" = True; imgExtension ".tiff" = True
 #ifdef WEBP
 imgExtension ".webp" = True
 #endif
