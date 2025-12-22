@@ -10,7 +10,7 @@ module PerceptualHash ( imgHash
                       ) where
 
 #ifdef AVIF
-import           Codec.Avif                    (decode)
+import           Codec.Avif                    (AvifResult, decodeE)
 #endif
 import qualified Codec.Picture                 as JuicyPixels
 #ifdef WEBP
@@ -18,6 +18,7 @@ import           Codec.Picture.WebP            (decodeRgb8, isAnimLenient)
 #endif
 import           Control.Arrow                 ((&&&))
 import           Control.Monad.ST              (runST)
+import           Data.Bifunctor                (first)
 import           Data.Bits                     (Bits, popCount, shiftL, xor, (.|.))
 import qualified Data.ByteString               as BS
 import qualified Data.ByteString.Lazy          as BSL
@@ -109,7 +110,7 @@ fileHash fp
         pure (case isAnimLenient (BSL.fromStrict contents) of {Right True -> Left "Animated .webp skipped..."; Right _ -> Right$hashWebp contents; Left e -> Left (fp ++ ": " ++ e)})
 #endif
 #ifdef AVIF
-    | ".avif" `isSuffixOf` fp = pure <$> fileHashAvif fp
+    | ".avif" `isSuffixOf` fp = first show <$> fileHashAvif fp
 #endif
     | otherwise = fileHashHip fp
 
@@ -121,31 +122,28 @@ fileHashDim fp
         pure (case isAnimLenient (BSL.fromStrict contents) of {Right True -> Left "Animated .webp skipped..."; Right _ -> Right$hashWebpDim contents; Left e -> Left (fp ++ ": " ++ e)})
 #endif
 #ifdef AVIF
-    | ".avif" `isSuffixOf` fp = pure <$> fileHashDimAvif fp
+    | ".avif" `isSuffixOf` fp = (first show <$> fileHashDimAvif fp)
 #endif
     | otherwise = fileHashDimHip fp
 
 #ifdef AVIF
+fileHashDimAvif :: FilePath -> IO (Either AvifResult (Word64, (Int, Int)))
+fileHashDimAvif = fmap (fmap (hashDim . convRepa)) . readAvif
+    where convRepa = fromRepaArrayS . toRepaArray
+
+fileHashAvif :: FilePath -> IO (Either AvifResult Word64)
+fileHashAvif = fmap (fmap (imgHash . convRepa)) . readAvif
+    where convRepa = fromRepaArrayS . toRepaArray
+
 {-# INLINE readAvif #-}
-readAvif :: FilePath -> IO (Image VS Y Double)
-readAvif = fmap convert . fileAvif
-
-fileHashDimAvif :: FilePath -> IO (Word64, (Int, Int))
-fileHashDimAvif = fmap (hashDim . convRepa) . readAvif
-    where convRepa = fromRepaArrayS . toRepaArray
-
-fileHashAvif :: FilePath -> IO Word64
-fileHashAvif = fmap (imgHash . convRepa) . readAvif
-    where convRepa = fromRepaArrayS . toRepaArray
-
-{-# INLINE fileAvif #-}
-fileAvif :: FilePath -> IO (Image VS RGBA Word8)
-fileAvif fp = do
-    (JuicyPixels.Image m n pixels) <- decode <$> BS.readFile fp
-    pure $ fromVector (n, m) $ VS.unsafeCast pixels
+readAvif :: FilePath -> IO (Either AvifResult (Image VS Y Double))
+readAvif fp = do
+    img <- decodeE <$> BS.readFile fp
+    case img of
+        Right (JuicyPixels.Image m n pixels) -> pure $ Right $ convert (fromVector (n,m) (VS.unsafeCast pixels) :: Image VS RGBA Word8)
+        Left e -> pure (Left e)
 #endif
 
-hashDim :: (Ord e, Floating e, Array arr Y e, Array arr X e, V.Vector (Hip.Vector arr) Bool, V.Vector (Hip.Vector arr) e) => Image arr Y e -> (Word64, (Int, Int))
 hashDim = imgHash &&& dims
 
 fileHashDimHip :: FilePath -> IO (Either String (Word64, (Int, Int)))
