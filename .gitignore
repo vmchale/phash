@@ -1,10 +1,7 @@
-*_sats.c
-*.swp
-.stack-work
 .hspec-failures
 .ghc.environment.*
 tags
-dist
+tags.mtime
 dist-*
 *.prof
 *.aux
