@@ -1,0 +1,7 @@
+import: ./cabal.project
+
+package perceptual-hash
+  ghc-options: -fwrite-ide-info
+
+tests: True
+benchmarks: True
