@@ -189,7 +189,8 @@ test-suite perceptual-hash-test
     build-depends:
         base,
         perceptual-hash,
-        hspec
+        tasty,
+        tasty-hunit
 
     if impl(ghc >=8.0)
         ghc-options:
